@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Dish = ({ dish }) => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px' }}>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px', marginBottom: '20px' }}>
     <div style={{ gridColumn: 'span 3', color: 'black' }}>{dish.dish.dish_name}</div>
     <div style={{ color: 'black' }}>{dish.dish.dish_calories}</div>
     <div style={{ color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
