@@ -248,12 +248,12 @@ export class Booking extends Component {
         return (
 
         <div>
-            <h3 className="text-center">Booking Page</h3>
+            <h3 className="text-center" style={{ margin: '40px' }}>Book Visits</h3>
             <div className="text-center mb-3">
                 <button onClick={() => this.handleDateChange(-7)} className="arrow-button">
                     &lt; Previous Week
                 </button>
-                <label style={{ margin: '0 10px', width: '200px', display: 'inline-block' }}>{weekRange}</label>
+                <label style={{ margin: '0 30px', width: '200px', display: 'inline-block', fontSize: '1.2em'}}>{weekRange}</label>
                 <button onClick={() => this.handleDateChange(7)} className="arrow-button">
                     Next Week &gt;
                 </button>

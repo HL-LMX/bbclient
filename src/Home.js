@@ -9,15 +9,15 @@ export class Home extends Component {
                     <h3 className="card-title text-center m-5">Version 1.0</h3>
 
                     <div className="col-md-10 card bg-light">
-                        <div className="row"> {/* Add a row to contain the columns */}
+                        <div className="row justify-content-center"> {/* Add a row to contain the columns */}
                             <div className="col-md-6">
                                 <div className="b-3">
                                     <div className="card-body m-3 text-center"> {/* Center the text */}
-                                        <p className="card-text" style={{fontSize: '1.5em'}}>In this page, you can:</p>
+                                        <p className="card-text" style={{fontSize: '1.5em', textAlign: 'left' }}>In this page, you can:</p>
                                         <ul className="">
-                                            <li className="list-group-item" style={{fontSize: '1.2em'}}> - Consult the dining hall menu</li>
-                                            <li className="list-group-item" style={{fontSize: '1.2em'}}> - Register your visit</li>
-                                            <li className="list-group-item" style={{fontSize: '1.2em'}}> - Help us plan food demand</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Consult the dining hall menu</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Register your visit</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Help us plan food demand</li>
                                         </ul>
                                     </div>
                                 </div>

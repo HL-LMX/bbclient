@@ -47,7 +47,7 @@ const Day = ({ date, dayName, availableDishesByType, isSelected, isPastDate, onC
             onClick={handleDayClick} // Pass date string to parent onClick handler if the day is in the future
         >
             <h4 style={{ textAlign: 'center', color: 'white' }}>
-                {dayName} - {date.getDate()}
+                {dayName} {date.getDate()}
             </h4>
 
             {Object.entries(availableDishesByType).map(([type, dishes]) => (

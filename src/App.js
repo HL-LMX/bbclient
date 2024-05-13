@@ -9,40 +9,41 @@ function App() {
   return (
     <BrowserRouter>
       <div>
-        <div className="App container" style={{ 
-          backgroundColor: '#556A7A', 
-          width: '100%', 
-          height: '200px', 
-          display: 'flex', 
-          justifyContent: 'center',
-          padding: '20px'
-        }}>
-          <div className="App container" style={{ color: 'white' }}>
-            <h1 className="d-flex justify-content-center m-3">
-              Booking Bite Mx
-            </h1>
-            <nav className="navbar navbar-expand-sm navbar-dark">
-              <ul className="navbar-nav">
-                <li className="nav-item- m-1">
-                  <NavLink
-                    className="btn btn-light btn-outline"
-                    to="/bookingbite"
-                  >
-                    Home
-                  </NavLink>
-                </li>
-                <li className="nav-item- m-1">
-                  <NavLink
-                    className="btn btn-light btn-outline"
-                    to="/bookingbite/booking"
-                  >
-                    Book Visits
-                  </NavLink>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
+      <div className="App" style={{ 
+  backgroundColor: '#556A7A', 
+  width: '100%', 
+  height: '200px', 
+  display: 'flex', 
+  justifyContent: 'center',
+  padding: '20px'
+}}>
+  <div style={{ color: 'white', maxWidth: '1200px', width: '100%' }}>
+    <h1 className="text-center m-3">
+      Booking Bite Mx
+    </h1>
+    <nav className="navbar navbar-expand-sm navbar-dark">
+      <ul className="navbar-nav">
+        <li className="nav-item- m-1">
+          <NavLink
+            className="btn btn-light btn-outline"
+            to="/bookingbite"
+          >
+            Home
+          </NavLink>
+        </li>
+        <li className="nav-item- m-1">
+          <NavLink
+            className="btn btn-light btn-outline"
+            to="/bookingbite/booking"
+          >
+            Book Visits
+          </NavLink>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
 
         <Routes>
           <Route path="/" element={<Navigate to="/bookingbite" />} />
