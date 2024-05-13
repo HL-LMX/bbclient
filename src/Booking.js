@@ -3,7 +3,15 @@ import { variables as bookingVariables } from './Variables';
 import Day from './components/Day';
 import './Booking.css';
 
+
+
+
+
 // Define the PopupMessage component
+const lockedDaysAhead = 0;  // Number of days locked from today. This avoids users selecting attendance for days too close that the chef can't adjust for.
+
+
+
 const PopupMessage = ({ message }) => {
     return (
         <div className="popup">
@@ -61,7 +69,7 @@ export class Booking extends Component {
     componentDidMount() {
 
         const twoWeeksFromNow = new Date();
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + lockedDaysAhead);
         this.setState({ currentDate: twoWeeksFromNow }, () => {
             this.refreshAvailableDishes();
             this.loadSavedDays();
