@@ -272,7 +272,7 @@ export class Booking extends Component {
                     const currentDate = new Date(firstDayOfWeek);
                     currentDate.setDate(currentDate.getDate() + index);
                     const oneWeekFromNow = new Date();
-                    oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7);
+                    oneWeekFromNow.setDate(oneWeekFromNow.getDate() + lockedDaysAhead);
                     const isPastDate = currentDate < oneWeekFromNow;
 
 
