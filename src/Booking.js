@@ -248,7 +248,8 @@ export class Booking extends Component {
         return (
 
         <div>
-            <h3 className="text-center" style={{ margin: '40px' }}>Book Visits</h3>
+            <h3 className="text-center" style={{ margin: '40px' }}>Visit Booking</h3>
+            <div className="text-center" style={{ margin: '40px', fontSize:'1.3rem'}}>Select the days you plan to attend by clicking on them and then clicking on "Save Changes".</div>
             <div className="text-center mb-3">
                 <button onClick={() => this.handleDateChange(-7)} className="arrow-button">
                     &lt; Previous Week
@@ -265,7 +266,7 @@ export class Booking extends Component {
                 {popup}
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridGap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gridGap: '20px' }}>
                 
                 {daysOfWeek.map((day, index) => {
 

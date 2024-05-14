@@ -46,7 +46,7 @@ export class Home extends Component {
 
                 </div>
                 <div className='m-5'>
-                    <h4 className="card-text text-center">Ready to get started? Click on the "Book Visits" button in the menu at the top left corner.</h4>
+                    <h4 className="card-text text-center">Ready to get started? Click on the "Visit Booking" button in the menu at the top left corner.</h4>
                 </div>
 
                 <div className="row justify-content-center">

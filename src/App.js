@@ -36,7 +36,7 @@ function App() {
             className="btn btn-light btn-outline"
             to="/bookingbite/booking"
           >
-            Book Visits
+            Visit Booking
           </NavLink>
         </li>
       </ul>
