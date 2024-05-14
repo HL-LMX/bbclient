@@ -7,7 +7,7 @@ import CourseComponent from './components/CourseComponent';
 
 import './MenuManagement.css';
 
-const lockedDaysAhead = 10;  // Number of days locked from today. This avoids chef changing food of days blocked for users.
+const lockedDaysAhead = 6;  // Number of days locked from today. This avoids chef changing food of days blocked for users.
 
 
 export class MenuManagement extends Component {
