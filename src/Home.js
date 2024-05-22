@@ -15,9 +15,9 @@ export class Home extends Component {
                                     <div className="card-body m-3 text-center"> {/* Center the text */}
                                         <p className="card-text" style={{fontSize: '1.5em', textAlign: 'left' }}>In this page, you can:</p>
                                         <ul className="">
-                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Check the menu</li>
-                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Register your visit</li>
-                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Help us plan food demand</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> 1. Check the menu</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> 2. Register your visit</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> 3. Help us plan food demand</li>
                                         </ul>
                                     </div>
                                 </div>
