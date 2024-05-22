@@ -268,7 +268,7 @@ export class Booking extends Component {
                 {popup}
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gridGap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gridGap: '20px', maxWidth:'1800px', margin: 'auto' }}>
                 
                 {daysOfWeek.map((day, index) => {
 

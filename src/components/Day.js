@@ -64,10 +64,10 @@ const Day = ({ date, dayName, availableDishesByType, isSelected, isPastDate, onC
                     <h5 style={{ color: 'black', margin: '0.5rem 0' }}>{type}</h5>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px' }}>
-                        <div style={{ gridColumn: 'span 3', color: 'black', fontWeight: 'bold' }}></div>
+                        <div style={{ gridColumn: 'span 5', color: 'black', fontWeight: 'bold' }}></div>
                         <div style={{ color: 'black', fontWeight: 'bold', fontSize: '.8rem' }}>Calories</div>
-                        <div style={{ color: 'black', fontWeight: 'bold', fontSize: '.7rem' }}>Light & Healthy</div>
-                        <div style={{ color: 'black', fontWeight: 'bold', fontSize: '.8rem' }}>Sugar Free</div>
+                        {/* <div style={{ color: 'black', fontWeight: 'bold', fontSize: '.7rem' }}>Light & Healthy</div>
+                        <div style={{ color: 'black', fontWeight: 'bold', fontSize: '.8rem' }}>Sugar Free</div> */}
                     </div>
 
                     {dishes.map(dish => (
