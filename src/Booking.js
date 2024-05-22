@@ -249,7 +249,9 @@ export class Booking extends Component {
 
         <div>
             <h3 className="text-center" style={{ margin: '40px' }}>Visit Booking</h3>
-            <div className="text-center" style={{ margin: '40px', fontSize:'1.3rem'}}>Select the days you plan to attend by clicking on them and then clicking on "Save Changes".</div>
+            <div className="text-center" style={{ margin: '40px 0', fontSize:'1.3rem'}}>Help us prepare the right amount of food by informing us about your visit.</div>
+            <div className="text-center" style={{ fontSize:'1.3rem'}}>Click a day to select or unselect it, then click "Save Changes"</div>
+            <div className="text-center" style={{ marginBottom: '40px', fontSize:'1.3rem'}}>Selected days show in orange</div>
             <div className="text-center mb-3">
                 <button onClick={() => this.handleDateChange(-7)} className="arrow-button">
                     &lt; Previous Week
