@@ -251,11 +251,10 @@ export class Booking extends Component {
             <h3 className="text-center" style={{ margin: '40px' }}>Help us prepare the right amount of food by choosing what days you plan to attend the dinning hall.</h3>
             <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                 <div style={{ textAlign: 'left', fontSize: '1.3rem' }}>                
-                    <div>- Past days are locked and show <b>Greyed out</b>.</div>                 
-                    <div>- Available days show in <b>Color</b>.</div>                    
-                    <div>- Click the days you plan to attend the dining hall.</div>    
-                    <div>- Selected days turn <b>Orange</b>.</div>
-                    <div style={{ marginBottom: '40px' }}>- When you finish selecting or unselecting your attendance, click "Save Changes".</div>
+                    <div><b>Select Days:</b> Click on the days you wish to attend. Selected days highlight in <b>Orange</b>.</div>                 
+                    {/* <div>- Available days show in <b>Colors</b>.</div>                     */}
+                    <div><b>Past Days:</b> Note that past days are locked and show as <b>Grey</b>.</div>   
+                    <div><b>Save Attendance:</b> Click on the days you wish to attend followed by <b>"Save Changes"</b>. Selected days highlight in <b>Orange</b>.</div>
                 </div>
             </div>
 
