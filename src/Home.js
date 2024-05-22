@@ -15,7 +15,7 @@ export class Home extends Component {
                                     <div className="card-body m-3 text-center"> {/* Center the text */}
                                         <p className="card-text" style={{fontSize: '1.5em', textAlign: 'left' }}>In this page, you can:</p>
                                         <ul className="">
-                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Consult the dining hall menu</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Check the menu</li>
                                             <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Register your visit</li>
                                             <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> - Help us plan food demand</li>
                                         </ul>
@@ -53,7 +53,7 @@ export class Home extends Component {
                     <div className="col-md">
                         <div className="card bg-light mb-3" style={{ minHeight:'10rem' }}>
                             <div className="card-body d-flex flex-column justify-content-between">
-                                <p className="card-text m-3" style={{fontSize: '1.5em'}}>Stay tuned for future updates! Additional features may include:</p>
+                                <p className="card-text m-3" style={{fontSize: '1.5em'}}>Stay tuned! Additional features may include:</p>
                                 
                                 
                                 <div className="row justify-content-between align-items-stretch">
