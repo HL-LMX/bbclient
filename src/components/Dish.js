@@ -1,3 +1,5 @@
+// Dish.js
+
 import React from 'react';
 
 const Dish = ({ dish }) => (
