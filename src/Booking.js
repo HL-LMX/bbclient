@@ -253,8 +253,8 @@ export class Booking extends Component {
                 <div style={{ textAlign: 'left', fontSize: '1.3rem' }}>                
                     <div><b>Select Days:</b> Click on the days you wish to attend. Selected days highlight in <b>Orange</b>.</div>                 
                     {/* <div>- Available days show in <b>Colors</b>.</div>                     */}
-                    <div><b>Past Days:</b> Note that past days are locked and show as <b>Grey</b>.</div>   
-                    <div style={{ marginBottom: '40px' }}><b>Save Attendance:</b> After clicking on the days you wish to attend save your selection by clicking <b>"Save Changes"</b>.</div>
+                    <div style={{ marginBottom: '40px' }}><b>Save Attendance:</b> After clicking on the days you wish to attend, save your selection by clicking <b>"Save Changes"</b>.</div>
+                    <div><b>Past Days:</b> Note that past days are locked and show as <b>Grey</b>.</div>
                 </div>
             </div>
 
