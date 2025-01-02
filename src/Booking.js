@@ -3,7 +3,15 @@ import { variables as bookingVariables } from './Variables';
 import Day from './components/Day';
 import './Booking.css';
 
+
+
+
+
 // Define the PopupMessage component
+const lockedDaysAhead = 0;  // Number of days locked from today. This avoids users selecting attendance for days too close that the chef can't adjust for.
+
+
+
 const PopupMessage = ({ message }) => {
     return (
         <div className="popup">
@@ -52,7 +60,7 @@ export class Booking extends Component {
     componentDidMount() {
         // Set default view to two weeks ahead
         const twoWeeksFromNow = new Date();
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + lockedDaysAhead);
         this.setState({ currentDate: twoWeeksFromNow }, () => {
             this.refreshAvailableDishes();
             this.loadSavedDays();
@@ -208,34 +216,44 @@ export class Booking extends Component {
         const popup = changesSaved ? <PopupMessage message="Changes saved" /> : null;
 
         return (
-            <div>
-                <h3 className="text-center">Booking Page</h3>
-                <div className="text-center mb-3">
-                    <button onClick={() => this.handleDateChange(-7)} className="arrow-button">
-                        &lt; Previous Week
-                    </button>
-                    <label style={{ margin: '0 10px', width: '200px', display: 'inline-block' }}>
-                        {weekRange}
-                    </label>
-                    <button onClick={() => this.handleDateChange(7)} className="arrow-button">
-                        Next Week &gt;
-                    </button>
+
+        <div>
+            <h3 className="text-center" style={{ margin: '40px' }}>Help us prepare the right amount of food by choosing what days you plan to attend the dinning hall.</h3>
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                <div style={{ textAlign: 'left', fontSize: '1.3rem' }}>                
+                    <div><b>Select Days:</b> Click on the days you wish to attend. Selected days highlight in <b>Orange</b>.</div>                 
+                    {/* <div>- Available days show in <b>Colors</b>.</div>                     */}
+                    <div style={{ marginBottom: '40px' }}><b>Save Attendance:</b> After clicking on the days you wish to attend, save your selection by clicking <b>"Save Changes"</b>.</div>
+                    <div><b>Past Days:</b> Note that past days are locked and show as <b>Grey</b>.</div>
                 </div>
+            </div>
 
-                <div className="text-center mb-3">
-                    <button onClick={this.handleSave} className="save-button">Save Changes</button>
-                    {popup}
-                </div>
+            <div className="text-center mb-3">
+                <button onClick={() => this.handleDateChange(-7)} className="arrow-button">
+                    &lt; Previous Week
+                </button>
+                <label style={{ margin: '0 30px', width: '200px', display: 'inline-block', fontSize: '1.2em'}}>{weekRange}</label>
+                <button onClick={() => this.handleDateChange(7)} className="arrow-button">
+                    Next Week &gt;
+                </button>
+            </div>
+            
+            <div className="text-center mb-3">
+                <button onClick={this.handleSave} className="save-button">Save Changes</button>
+            
+                {popup}
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gridGap: '20px', maxWidth:'1800px', margin: 'auto' }}>
+                
+                {daysOfWeek.map((day, index) => {
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridGap: '20px' }}>
-                    {daysOfWeek.map((day, index) => {
-                        const dayDate = new Date(firstDayOfWeek);
-                        dayDate.setDate(dayDate.getDate() + index);
+                    const currentDate = new Date(firstDayOfWeek);
+                    currentDate.setDate(currentDate.getDate() + index);
+                    const oneWeekFromNow = new Date();
+                    oneWeekFromNow.setDate(oneWeekFromNow.getDate() + lockedDaysAhead);
+                    const isPastDate = currentDate < oneWeekFromNow;
 
-                        // For disabling "past" or "within next 7 days" logic, adapt as needed
-                        const oneWeekFromNow = new Date();
-                        oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7);
-                        const isPastDate = dayDate < oneWeekFromNow;
 
                         return (
                             <Day

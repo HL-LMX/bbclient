@@ -9,15 +9,15 @@ export class Home extends Component {
                     <h3 className="card-title text-center m-5">Version 1.0</h3>
 
                     <div className="col-md-10 card bg-light">
-                        <div className="row"> {/* Add a row to contain the columns */}
+                        <div className="row justify-content-center"> {/* Add a row to contain the columns */}
                             <div className="col-md-6">
                                 <div className="b-3">
                                     <div className="card-body m-3 text-center"> {/* Center the text */}
-                                        <p className="card-text" style={{fontSize: '1.5em'}}>In this page, you can:</p>
+                                        <p className="card-text" style={{fontSize: '1.5em', textAlign: 'left' }}>In this page, you can:</p>
                                         <ul className="">
-                                            <li className="list-group-item" style={{fontSize: '1.2em'}}> - Consult the dining hall menu</li>
-                                            <li className="list-group-item" style={{fontSize: '1.2em'}}> - Register your visit</li>
-                                            <li className="list-group-item" style={{fontSize: '1.2em'}}> - Help us plan food demand</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> 1. Check the menu</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> 2. Register your visit</li>
+                                            <li className="list-group-item" style={{ fontSize: '1.2em', textAlign: 'left' }}> 3. Help us plan food demand</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -46,14 +46,14 @@ export class Home extends Component {
 
                 </div>
                 <div className='m-5'>
-                    <h4 className="card-text text-center">Ready to get started? Click on the "Book Visits" button in the menu at the top left corner.</h4>
+                    <h4 className="card-text text-center">Ready to get started? Click on the "Visit Booking" button in the menu at the top left corner.</h4>
                 </div>
 
                 <div className="row justify-content-center">
                     <div className="col-md">
                         <div className="card bg-light mb-3" style={{ minHeight:'10rem' }}>
                             <div className="card-body d-flex flex-column justify-content-between">
-                                <p className="card-text m-3" style={{fontSize: '1.5em'}}>Stay tuned for future updates! Additional features may include:</p>
+                                <p className="card-text m-3" style={{fontSize: '1.5em'}}>Stay tuned! Additional features may include:</p>
                                 
                                 
                                 <div className="row justify-content-between align-items-stretch">
