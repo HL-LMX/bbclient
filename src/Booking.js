@@ -51,9 +51,9 @@ export class Booking extends Component {
 
     componentDidMount() {
         // Set default view to two weeks ahead
-        const twoWeeksFromNow = new Date();
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
-        this.setState({ currentDate: twoWeeksFromNow }, () => {
+        const dateToDisplay = new Date();
+        dateToDisplay.setDate(dateToDisplay.getDate() + 0); //Number of days ahead to display for user
+        this.setState({ currentDate: dateToDisplay }, () => {
             this.refreshAvailableDishes();
             this.loadSavedDays();
         });
