@@ -198,7 +198,9 @@ export class Booking extends Component {
         const lastDayOfWeek = new Date(firstDayOfWeek);
         lastDayOfWeek.setDate(firstDayOfWeek.getDate() + daysOfWeek.length - 1);
 
-        const weekRange = `${firstDayOfWeek.toLocaleDateString()} - ${lastDayOfWeek.toLocaleDateString()}`;
+        const options = { day: '2-digit', month: 'short' };
+        const weekRange = `${firstDayOfWeek.toLocaleDateString('en-GB', options)} - ${lastDayOfWeek.toLocaleDateString('en-GB', options)}`;
+
         const availableDishesByDayAndType = calculateAvailableDishesByDayAndType(
             currentDate,
             availableDishes,
@@ -209,12 +211,12 @@ export class Booking extends Component {
 
         return (
             <div>
-                <h3 className="text-center">Booking Page</h3>
-                <div className="text-center mb-3">
+                <h3 className="text-center" style={{ fontSize: '32px', margin: '1rem 0'}}>Visit Booking</h3>
+                <div className="text-center mb-3" style={{padding:'1rem 0'}}>
                     <button onClick={() => this.handleDateChange(-7)} className="arrow-button">
                         &lt; Previous Week
                     </button>
-                    <label style={{ margin: '0 10px', width: '200px', display: 'inline-block' }}>
+                    <label style={{ margin: '0 10px', width: '200px', display: 'inline-block', fontSize: '1.5rem'}}>
                         {weekRange}
                     </label>
                     <button onClick={() => this.handleDateChange(7)} className="arrow-button">
@@ -223,8 +225,8 @@ export class Booking extends Component {
                 </div>
 
                 <div className="text-center mb-3">
-                    <button onClick={this.handleSave} className="save-button">Save Changes</button>
-                    {popup}
+                    {/* <button onClick={this.handleSave} className="save-button">Save Changes</button>
+                    {popup} */}
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridGap: '20px' }}>
