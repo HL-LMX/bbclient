@@ -222,15 +222,15 @@ export class MenuManagement extends Component {
     return (
 
 		<div>
-			<h3 className="text-center">Menu Management</h3>
+			<h3 className="text-center" style={{ fontSize: '32px', margin: '1rem 0'}}>Menu Management</h3>
 
-			<div className="d-flex justify-content-center mb-3">
+			<div className="d-flex justify-content-center mb-3" style={{ padding: '2rem 0'}}>
 				<button className="btn btn-light mm-btn" onClick={() => this.handleDateChange(-1)}>
 					Previous Day
 				</button>
 
-				<span className="mx-3" style={{ fontSize: '24px', margin: '1rem auto', width: '200px', display: 'inline-block', textAlign: 'center' }}>
-					{selectedDate.toDateString()}
+				<span className="mx-3" style={{ fontSize: '24px', margin: '1rem auto', width: '200px', display: 'inline-block', textAlign: 'center',  }}>
+					{`${selectedDate.toLocaleDateString('en-US', { weekday: 'long' })} ${selectedDate.toLocaleDateString('en-US', { month: 'short' })} ${selectedDate.getDate()}`}
 				</span>
 
 				<button className="btn btn-light mm-btn" onClick={() => this.handleDateChange(1)}>
@@ -239,9 +239,9 @@ export class MenuManagement extends Component {
 			</div>
 
 
-			<div className="text-center mb-3" style={{ fontSize: '24px' }}>
+			{/* <div className="text-center mb-3" style={{ fontSize: '24px' }}>
 				<div>Attendees: {attendees}</div>
-			</div>
+			</div> */}
 			
 			<div className="menu-sections">
 				<div className="bg-secondary text-light rounded p-3">
