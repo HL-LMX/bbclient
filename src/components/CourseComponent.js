@@ -49,7 +49,9 @@ const CourseComponent = ({
 				<h4 className="text-center">{title}</h4>
 
 				{/* Title Row */}
-				<div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', marginBottom: '1em', gap: '0.5em' }}>
+				<div style={{ display: 'grid', gridTemplateColumns: 'repeat(11, 1fr)', marginBottom: '1em', gap: '0.5em' }}>
+					{/* Placeholder for the trash column */}
+  					<span style={{ gridColumn: 'span 1' }}></span>
 					<span style={{ gridColumn: 'span 6', fontSize: '1rem', textAlign: 'center', alignSelf: 'flex-end' }}>Dish Name</span>
 					<span style={{ gridColumn: 'span 2', fontSize: '1rem', textAlign: 'center', alignSelf: 'flex-end' }}>Cal.</span>
 					<span style={{ gridColumn: 'span 1', fontSize: '0.8rem', textAlign: 'right', alignSelf: 'flex-end' }}>Light & Healthy</span>
