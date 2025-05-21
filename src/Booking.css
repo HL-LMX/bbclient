@@ -1,3 +1,6 @@
+/* src/Booking.css */
+
+/* Arrow button styling */
 .arrow-button {
     padding: 10px 20px;
     font-size: 1em;
@@ -5,8 +8,8 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease; /* Include box-shadow in transition */
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Shadow below by default */
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 .arrow-button:hover {
@@ -14,7 +17,7 @@
 }
 
 .arrow-button:active {
-    box-shadow: none; /* No shadow when clicked */
+    box-shadow: none;
 }
 
 .save-button {
@@ -25,8 +28,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease; /* Include box-shadow in transition */
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Shadow below by default */
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 .save-button:hover {
@@ -34,21 +37,19 @@
 }
 
 .save-button:active {
-    box-shadow: none; /* No shadow when clicked */
+    box-shadow: none;
 }
-
 
 .popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #ffffff; /* Nice color */
-    /* border: 5px solid #00ad0e; */
+    background-color: #ffffff;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 9999;
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
     width: 20rem;
 }
 
