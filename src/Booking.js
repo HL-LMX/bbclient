@@ -1,262 +1,227 @@
-import React, { Component } from 'react';
+// src/Booking.js
+
+import React, { useState, useEffect } from 'react';
 import { variables as bookingVariables } from './Variables';
 import Day from './components/Day';
 import './Booking.css';
 
-// Define the PopupMessage component
-const PopupMessage = ({ message }) => {
-    return (
-        <div className="popup">
-            <span className="popup-message">{message}</span>
-        </div>
-    );
-};
+/**
+ * PopupMessage: Displays a popup message for feedback (e.g., on save).
+ */
+const PopupMessage = ({ message }) => (
+  <div className="popup">
+    <span className="popup-message">{message}</span>
+  </div>
+);
 
-// Function to calculate available dishes by day and type
+/**
+ * Calculates available dishes grouped by day and type for the week.
+ */
 const calculateAvailableDishesByDayAndType = (currentDate, availableDishes, daysOfWeek) => {
     const availableDishesByDayAndType = {};
 
     daysOfWeek.forEach(day => {
-        availableDishesByDayAndType[day] = availableDishes.filter(dish => {
+        availableDishesByDayAndType[day] = availableDishes
+        .filter(dish => {
             const dishDate = new Date(dish.date + 'T00:00:00Z');
             const options = { weekday: 'long', timeZone: 'UTC' };
             const dayName = dishDate.toLocaleDateString('en-US', options);
             return dayName === day;
-        }).reduce((acc, dish) => {
+        })
+        .reduce((acc, dish) => {
             const type = dish.dish.dish_type;
-            if (!acc[type]) {
-                acc[type] = [];
-            }
+            if (!acc[type]) acc[type] = [];
             acc[type].push(dish);
             return acc;
         }, {});
     });
 
-    return availableDishesByDayAndType;
+  return availableDishesByDayAndType;
 };
 
-export class Booking extends Component {
+/**
+ * Booking: Main booking/attendance screen.
+ * Allows users to select days for booking and displays available dishes for each day.
+ */
+export const Booking = () => {
+    const [availableDishes, setAvailableDishes] = useState([]);
+    const [currentDate, setCurrentDate] = useState(() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 0); // Default to current week
+        return date;
+    });
+    const [unsavedChanges, setUnsavedChanges] = useState([]);
+    const [savedDays, setSavedDays] = useState([]);
+    const [changesSaved, setChangesSaved] = useState(false);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            availableDishes: [],
-            currentDate: new Date(),
-            unsavedChanges: [],
-            savedDays: [],
-            changesSaved: false, // Track whether changes are saved
-        };
-        this.loadSavedDays();
-    }
+    // Load saved days from localStorage on mount
+    useEffect(() => {
+        const saved = JSON.parse(localStorage.getItem('savedDays')) || [];
+        setSavedDays(saved);
+        setUnsavedChanges(saved.map(date => new Date(date)));
+    }, []);
 
-    componentDidMount() {
-        // Set default view to two weeks ahead
-        const dateToDisplay = new Date();
-        dateToDisplay.setDate(dateToDisplay.getDate() + 0); //Number of days ahead to display for user
-        this.setState({ currentDate: dateToDisplay }, () => {
-            this.refreshAvailableDishes();
-            this.loadSavedDays();
-        });
-    }
+    // Fetch dishes for the selected week
+    useEffect(() => {
+        refreshAvailableDishes();
+        // Load saved days again if needed
+        // Note: This will reload on week change (could be made more efficient)
+        const saved = JSON.parse(localStorage.getItem('savedDays')) || [];
+        setSavedDays(saved);
+        setUnsavedChanges(saved.map(date => new Date(date)));
+        // eslint-disable-next-line
+    }, [currentDate]);
 
-    refreshAvailableDishes() {
-        // We are no longer using ISO week numbers. Instead, we’ll pass the actual date to the backend.
-        const selectedDate = this.state.currentDate.toISOString().split('T')[0];
-
-        // Note the endpoint changed to `booking/week?date=...`
+    const refreshAvailableDishes = () => {
+        const selectedDate = currentDate.toISOString().split('T')[0];
         fetch(bookingVariables.API_URL + 'booking/week?date=' + selectedDate)
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ availableDishes: data.dishes });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    handleDateChange = (days) => {
-        const newDate = new Date(this.state.currentDate);
-        newDate.setDate(newDate.getDate() + days);
-        this.setState({ currentDate: newDate }, this.refreshAvailableDishes);
+        .then(response => response.json())
+        .then(data => setAvailableDishes(data.dishes))
+        .catch(error => console.error('Error:', error));
     };
 
-    handleSave = () => {
-        const { unsavedChanges, savedDays } = this.state;
-        // Convert selected dates to ISO string format
-        const selectedDates = unsavedChanges.map(date => date.toISOString().split('T')[0]);
+    const handleDateChange = (days) => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(newDate.getDate() + days);
+        setCurrentDate(newDate);
+    };
 
-        // Find new dates to add to attendance and dates to remove from attendance
+    const handleSave = () => {
+        const selectedDates = unsavedChanges.map(date => date.toISOString().split('T')[0]);
         const newDatesToAdd = selectedDates.filter(date => !savedDays.includes(date));
         const datesToRemove = savedDays.filter(date => !unsavedChanges.some(day => day.toISOString().split('T')[0] === date));
 
-        // Check if there are any changes to save
         if (newDatesToAdd.length === 0 && datesToRemove.length === 0) {
-            console.log("No changes to save.");
-            return;
+        console.log("No changes to save.");
+        return;
         }
 
-        // Add new dates to attendance
         if (newDatesToAdd.length > 0) {
-            this.addToAttendance(newDatesToAdd);
-            this.setState({ changesSaved: true });
+        addToAttendance(newDatesToAdd);
+        setChangesSaved(true);
         }
-
-        // Remove dates from attendance
         if (datesToRemove.length > 0) {
-            this.removeFromAttendance(datesToRemove);
-            this.setState({ changesSaved: true });
+        removeFromAttendance(datesToRemove);
+        setChangesSaved(true);
         }
 
-        // Update savedDays with the new saved dates
         const newSavedDays = [...unsavedChanges.map(date => date.toISOString().split('T')[0])];
-        this.setState({ savedDays: newSavedDays });
-
-        // Save updated savedDays to local storage
+        setSavedDays(newSavedDays);
         localStorage.setItem('savedDays', JSON.stringify(newSavedDays));
 
-        // Hide the popup message after 3 seconds
-        setTimeout(() => {
-            this.setState({ changesSaved: false });
-        }, 3000);
+        setTimeout(() => setChangesSaved(false), 3000);
     };
 
-    addToAttendance = (dates) => {
+    const addToAttendance = (dates) => {
         fetch(bookingVariables.API_URL + 'booking/add-attendance/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dates),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dates),
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to add attendance');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Attendance added successfully:', data);
-            })
-            .catch(error => {
-                console.error('Error adding attendance:', error);
-            });
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to add attendance');
+            return response.json();
+        })
+        .then(data => {
+            console.log('Attendance added successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error adding attendance:', error);
+        });
     };
 
-    removeFromAttendance = (dates) => {
+    const removeFromAttendance = (dates) => {
         fetch(bookingVariables.API_URL + 'booking/remove-attendance/', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dates),
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dates),
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to remove attendance');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Attendance removed successfully:', data);
-            })
-            .catch(error => {
-                console.error('Error removing attendance:', error);
-            });
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to remove attendance');
+            return response.json();
+        })
+        .then(data => {
+            console.log('Attendance removed successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error removing attendance:', error);
+        });
     };
 
-    toggleDaySelection = (day) => {
-        const { unsavedChanges } = this.state;
+    const toggleDaySelection = (day) => {
         const selectedDateString = new Date(day).toISOString().split('T')[0];
-        const index = unsavedChanges.findIndex(selectedDay => selectedDay.toISOString().split('T')[0] === selectedDateString);
+        const index = unsavedChanges.findIndex(
+        selectedDay => selectedDay.toISOString().split('T')[0] === selectedDateString
+        );
         if (index === -1) {
-            this.setState(prevState => ({ unsavedChanges: [...prevState.unsavedChanges, new Date(day)] }));
+        setUnsavedChanges(prev => [...prev, new Date(day)]);
         } else {
-            this.setState(prevState => ({
-                unsavedChanges: prevState.unsavedChanges.filter((_, idx) => idx !== index)
-            }));
+        setUnsavedChanges(prev => prev.filter((_, idx) => idx !== index));
         }
     };
 
-    // We no longer need getISOWeekNumber, so it’s removed.
+    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-    loadSavedDays() {
-        const savedDays = JSON.parse(localStorage.getItem('savedDays')) || [];
-        this.setState(prevState => ({
-            savedDays,
-            unsavedChanges: savedDays.map(date => new Date(date)),
-        }));
-    }
+    // Calculate Monday of the week for currentDate
+    const firstDayOfWeek = new Date(currentDate);
+    firstDayOfWeek.setDate(firstDayOfWeek.getDate() - firstDayOfWeek.getDay() + 1);
+    const lastDayOfWeek = new Date(firstDayOfWeek);
+    lastDayOfWeek.setDate(firstDayOfWeek.getDate() + daysOfWeek.length - 1);
 
-    render() {
-        const { unsavedChanges, availableDishes, currentDate, changesSaved } = this.state;
-        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const options = { day: '2-digit', month: 'short' };
+    const weekRange = `${firstDayOfWeek.toLocaleDateString('en-GB', options)} - ${lastDayOfWeek.toLocaleDateString('en-GB', options)}`;
 
-        // Calculate Monday of the week for currentDate
-        const firstDayOfWeek = new Date(currentDate);
-        // getDay(): Sunday=0, Monday=1, ..., so we do minus getDay() + 1 for Monday
-        firstDayOfWeek.setDate(firstDayOfWeek.getDate() - firstDayOfWeek.getDay() + 1);
+    const availableDishesByDayAndType = calculateAvailableDishesByDayAndType(currentDate, availableDishes, daysOfWeek);
 
-        // Friday is 4 days from Monday
-        const lastDayOfWeek = new Date(firstDayOfWeek);
-        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + daysOfWeek.length - 1);
+    const popup = changesSaved ? <PopupMessage message="Changes saved" /> : null;
 
-        const options = { day: '2-digit', month: 'short' };
-        const weekRange = `${firstDayOfWeek.toLocaleDateString('en-GB', options)} - ${lastDayOfWeek.toLocaleDateString('en-GB', options)}`;
+    return (
+        <div>
+        <h3 className="text-center" style={{ fontSize: '32px', margin: '1rem 0' }}>Visit Booking</h3>
+        <div className="text-center mb-3" style={{ padding: '1rem 0' }}>
+            <button onClick={() => handleDateChange(-7)} className="arrow-button">
+            &lt; Previous Week
+            </button>
+            <label style={{ margin: '0 10px', width: '200px', display: 'inline-block', fontSize: '1.5rem' }}>
+            {weekRange}
+            </label>
+            <button onClick={() => handleDateChange(7)} className="arrow-button">
+            Next Week &gt;
+            </button>
+        </div>
 
-        const availableDishesByDayAndType = calculateAvailableDishesByDayAndType(
-            currentDate,
-            availableDishes,
-            daysOfWeek
-        );
+        <div className="text-center mb-3">
+            <button onClick={handleSave} className="save-button">Save Changes</button>
+            {popup}
+        </div>
 
-        const popup = changesSaved ? <PopupMessage message="Changes saved" /> : null;
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridGap: '20px' }}>
+            {daysOfWeek.map((day, index) => {
+            const dayDate = new Date(firstDayOfWeek);
+            dayDate.setDate(dayDate.getDate() + index);
 
-        return (
-            <div>
-                <h3 className="text-center" style={{ fontSize: '32px', margin: '1rem 0'}}>Visit Booking</h3>
-                <div className="text-center mb-3" style={{padding:'1rem 0'}}>
-                    <button onClick={() => this.handleDateChange(-7)} className="arrow-button">
-                        &lt; Previous Week
-                    </button>
-                    <label style={{ margin: '0 10px', width: '200px', display: 'inline-block', fontSize: '1.5rem'}}>
-                        {weekRange}
-                    </label>
-                    <button onClick={() => this.handleDateChange(7)} className="arrow-button">
-                        Next Week &gt;
-                    </button>
-                </div>
+            // For disabling "past" or "within next 7 days" logic
+            const oneWeekFromNow = new Date();
+            oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7);
+            const isPastDate = dayDate < oneWeekFromNow;
 
-                <div className="text-center mb-3">
-                    {/* <button onClick={this.handleSave} className="save-button">Save Changes</button>
-                    {popup} */}
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridGap: '20px' }}>
-                    {daysOfWeek.map((day, index) => {
-                        const dayDate = new Date(firstDayOfWeek);
-                        dayDate.setDate(dayDate.getDate() + index);
-
-                        // For disabling "past" or "within next 7 days" logic, adapt as needed
-                        const oneWeekFromNow = new Date();
-                        oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7);
-                        const isPastDate = dayDate < oneWeekFromNow;
-
-                        return (
-                            <Day
-                                key={index}
-                                date={dayDate}
-                                dayName={day}
-                                availableDishesByType={availableDishesByDayAndType[day] || {}}
-                                isSelected={unsavedChanges.some(selectedDay =>
-                                    selectedDay.toISOString().split('T')[0] === dayDate.toISOString().split('T')[0]
-                                )}
-                                isPastDate={isPastDate}
-                                onClick={this.toggleDaySelection}
-                            />
-                        );
-                    })}
-                </div>
-            </div>
-        );
-    }
-}
+            return (
+                <Day
+                key={index}
+                date={dayDate}
+                dayName={day}
+                availableDishesByType={availableDishesByDayAndType[day] || {}}
+                isSelected={unsavedChanges.some(selectedDay =>
+                    selectedDay.toISOString().split('T')[0] === dayDate.toISOString().split('T')[0]
+                )}
+                isPastDate={isPastDate}
+                onClick={toggleDaySelection}
+                />
+            );
+            })}
+        </div>
+        </div>
+    );
+};
 
 export default Booking;
