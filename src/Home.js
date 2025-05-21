@@ -10,7 +10,7 @@ export const Home = () => {
   return (
     <div className="container">
       <div className="row justify-content-center">
-        <h3 className="card-title text-center m-5">Version 1.0</h3>
+        <h3 className="card-title text-center m-5">Version 1.1</h3>
 
         <div className="col-md-10 card bg-light">
           <div className="row justify-content-center">
