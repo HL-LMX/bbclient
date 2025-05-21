@@ -42,11 +42,6 @@ const App = () => {
                     Visit Booking
                   </NavLink>
                 </li>
-                <li className="nav-item- m-1">
-                  <NavLink className="btn btn-light btn-outline" to="/bookingbite/menu-management">
-                    Menu Management
-                  </NavLink>
-                </li>
               </ul>
             </nav>
           </div>
