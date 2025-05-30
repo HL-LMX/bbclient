@@ -77,7 +77,9 @@ const RatingStars = ({
   };
 
   return (
-    <div style={{ marginTop: '-1em', display: 'flex', alignItems: 'center' }}>
+    <div style={{ marginTop: '-1em', display: 'flex', alignItems: 'center' }}
+    onClick={e => e.stopPropagation()}
+      >
       {[1, 2, 3, 4, 5].map(val => {
         const filled = val <= (userRating || 0);
         // if editable: show gold & black; otherwise greyed-out
