@@ -24,7 +24,7 @@ const Booking = () => {
                     We've upgraded and migrated to a new location.
                 </p>
                 <p style={{ fontSize: '1.5rem', color: '#555', margin: '0 0 3rem'}}>
-                    Please visit the new page in the following link:
+                    Please visit the new page at the following link:
                 </p>
                 <a href="http://194.9.161.245/bookingbite/booking" style={{ fontSize: '1.6rem', color: '#007bff', textDecoration: 'none' }}>
                     http://194.9.161.245/bookingbite/booking
