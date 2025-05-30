@@ -190,10 +190,10 @@ export const Booking = () => {
       </div>
         <div className="text-center mb-3" >
             <p style={{ fontSize: '1.5rem', margin: '1rem 0'}}>
-                Remember to rate the dishes you ate with the new <b>rating option</b>* :D
+                Remember to rate the dishes you ate with the new <b>rating option</b>*
             </p>
             <p style={{ fontSize: '1rem', margin: '1rem 0'}}>
-                *Only available on days with saved attendance.
+                *Rating is only available on days with saved attendance.
             </p>
         </div>
       <div className="text-center mb-3">

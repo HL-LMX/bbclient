@@ -14,10 +14,10 @@ const Day = ({
     onClick
 }) => {
     const saturatedColors = {
-        Monday: '#390099',    // Deep Purple
-        Tuesday: '#9E0059',   // Dark Magenta
-        Wednesday: '#FF0054', // Vivid Red-Pink
-        Thursday: '#FF5400',  // Bright Orange
+        Monday: '#2F0FAF',    // Dark Blue
+        Tuesday: '#940A59',   // Dark Magenta
+        Wednesday: '#E41057', // Vivid Red-Pink
+        Thursday: '#EC5E17',  // Bright Orange
         Friday: '#FFBD00',    // Vibrant Yellow
     };
     const desaturatedColors = {
@@ -29,18 +29,24 @@ const Day = ({
     };
 
 
+    let titleColor = '';
     let backgroundColor = '';
+    
     if (isSelected && !isPastDate) {
-        // Selected future day
+        // Selected Future day
+        titleColor = 'white';
         backgroundColor = saturatedColors[dayName];
     } else if (isSelected && isPastDate) {
         // Selected past day
+        titleColor = 'grey';
         backgroundColor = desaturatedColors[dayName];
     } else if (isPastDate) {
         // Past day
+        titleColor = 'grey';
         backgroundColor = "lightgrey";
     } else {
         // Future day
+        titleColor = 'black';
         backgroundColor = desaturatedColors[dayName] || '#FFFFFF';
     }
 
@@ -56,7 +62,6 @@ const Day = ({
 
       // set text color grey for past dates, black otherwise
     const textColor = isPastDate ? 'grey' : 'black';
-    const dayTextColor = isPastDate ? 'white' : 'black';
 
 
 
@@ -71,7 +76,7 @@ const Day = ({
             }}
             onClick={handleDayClick}
         >
-            <h4 style={{ textAlign: 'center', color: dayTextColor }}>
+            <h4 style={{ textAlign: 'center', color: titleColor }}>
                 {dayName} {date.getDate()}
             </h4>
             {typeOrder.map(type => (
