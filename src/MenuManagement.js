@@ -140,6 +140,8 @@ export const MenuManagement = () => {
     modificationDueDate.setDate(modificationDueDate.getDate() + lockedDaysAhead);
     const isPastDate = selectedDate < modificationDueDate;
 
+
+
     return (
         <div>
             <h3 className="text-center" style={{ fontSize: '32px', margin: '1rem 0' }}>Menu Management</h3>
@@ -164,6 +166,10 @@ export const MenuManagement = () => {
                 </button>
             </div>
 
+            <div className="text-center mb-3" style={{ fontSize: '24px' }}>
+				<div>Attendees: {attendees}</div>
+			</div>
+            
             <div className="menu-sections">
 
                 <div className="bg-secondary text-light rounded p-3">
