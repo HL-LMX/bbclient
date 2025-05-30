@@ -55,11 +55,11 @@ const CourseComponent = ({
                 {/* Title Row */}
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(11, 1fr)',
+                    gridTemplateColumns: 'repeat(12, 1fr)',
                     marginBottom: '1em',
                     gap: '0.5em'
                 }}>
-                    <span style={{ gridColumn: 'span 1' }}></span>
+                    <span style={{ gridColumn: 'span 2' }}></span>
                     <span style={{
                         gridColumn: 'span 6',
                         fontSize: '1rem',

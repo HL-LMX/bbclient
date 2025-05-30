@@ -1,5 +1,3 @@
-// src/components/Day.js
-
 import React from 'react';
 import Dish from './Dish';
 
@@ -15,23 +13,35 @@ const Day = ({
     isPastDate,
     onClick
 }) => {
-    const dayColors = {
-        Monday: 'hsl(345, 60%, 40%)',    // Pink
-        Tuesday: 'hsl(45, 60%, 50%)',     // Yellow
-        Wednesday: 'hsl(145, 60%, 40%)',  // Green
-        Thursday: 'hsl(185, 70%,40%)',    // Cyan
-        Friday: 'hsl(285, 40%, 40%)',     // Purple
+    const saturatedColors = {
+        Monday: '#390099',    // Deep Purple
+        Tuesday: '#9E0059',   // Dark Magenta
+        Wednesday: '#FF0054', // Vivid Red-Pink
+        Thursday: '#FF5400',  // Bright Orange
+        Friday: '#FFBD00',    // Vibrant Yellow
     };
+    const desaturatedColors = {
+        Monday: '#BBA6D6',    // Desaturated Deep Purple
+        Tuesday: '#D5A5BB',   // Desaturated Magenta
+        Wednesday: '#FFB3C1', // Light Pink
+        Thursday: '#FFC2A6',  // Light Orange
+        Friday: '#FFE7A8',    // Pale Yellow
+    };
+
 
     let backgroundColor = '';
     if (isSelected && !isPastDate) {
-        backgroundColor = '#FF6600';
+        // Selected future day
+        backgroundColor = saturatedColors[dayName];
     } else if (isSelected && isPastDate) {
-        backgroundColor = '#ffbe95';
+        // Selected past day
+        backgroundColor = desaturatedColors[dayName];
     } else if (isPastDate) {
-        backgroundColor = 'lightgrey';
+        // Past day
+        backgroundColor = "lightgrey";
     } else {
-        backgroundColor = dayColors[dayName] || '#FFFFFF';
+        // Future day
+        backgroundColor = desaturatedColors[dayName] || '#FFFFFF';
     }
 
     // Order of dish types
@@ -42,6 +52,13 @@ const Day = ({
             onClick(date.toISOString().split('T')[0]);
         }
     };
+
+
+      // set text color grey for past dates, black otherwise
+    const textColor = isPastDate ? 'grey' : 'black';
+    const dayTextColor = isPastDate ? 'white' : 'black';
+
+
 
     return (
         <div
@@ -54,7 +71,7 @@ const Day = ({
             }}
             onClick={handleDayClick}
         >
-            <h4 style={{ textAlign: 'center', color: 'white' }}>
+            <h4 style={{ textAlign: 'center', color: dayTextColor }}>
                 {dayName} {date.getDate()}
             </h4>
             {typeOrder.map(type => (
@@ -65,16 +82,17 @@ const Day = ({
                             marginBottom: '1em',
                             backgroundColor: 'rgba(255, 255, 255, 0.5)',
                             padding: '1em',
-                            borderRadius: '0.5em'
+                            borderRadius: '0.5em',
+                            boxShadow: '.2rem  .4rem 10px rgba(0, 0, 0, 0.15)'
                         }}
                     >
-                        <h5 style={{ color: 'black', margin: '0.5rem 0' }}>{type}</h5>
+                        <h5 style={{ color: textColor, margin: '0.5rem 0' }}>{type}</h5>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '10px' }}>
-                            <div style={{ gridColumn: 'span 5', color: 'black', fontWeight: 'bold' }}></div>
-                            <div style={{ color: 'black', fontWeight: 'bold', fontSize: '.8rem' }}>Calories</div>
+                            <div style={{ gridColumn: 'span 5', color: textColor, fontWeight: 'bold' }}></div>
+                            <div style={{ color: textColor, fontWeight: 'bold', fontSize: '.8rem' }}>Calories</div>
                         </div>
                         {availableDishesByType[type].map(dish => (
-                            <Dish key={dish.dish.dish_id} dish={dish} />
+                            <Dish key={dish.dish.dish_id} dish={dish} isSelected={isSelected} />
                         ))}
                     </div>
                 )

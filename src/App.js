@@ -20,7 +20,7 @@ const App = () => {
         <header
           className="App"
           style={{
-            backgroundColor: '#556A7A',
+            backgroundColor: '#F79800',
             width: '100%',
             height: '200px',
             display: 'flex',
@@ -39,7 +39,7 @@ const App = () => {
                 </li>
                 <li className="nav-item- m-1">
                   <NavLink className="btn btn-light btn-outline" to="/bookingbite/booking">
-                    Visit Booking
+                    Menu Calendar
                   </NavLink>
                 </li>
               </ul>
@@ -61,7 +61,7 @@ const App = () => {
         {/* Footer Section */}
         <footer
           style={{
-            backgroundColor: '#556A7A',
+            backgroundColor: '#FFA81C',
             color: 'white',
             textAlign: 'center',
             padding: '30px',
