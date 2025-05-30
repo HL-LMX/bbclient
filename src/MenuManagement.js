@@ -34,7 +34,7 @@ export const MenuManagement = () => {
         const apiUrl = variables.API_URL + `chef-management/day-dishes/${formattedDate}/`;
 
         try {
-            const response = await fetch(apiUrl);
+            const response = await fetch(apiUrl, { cache: "no-store" });
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             const data = await response.json();
             updateDishes(data);

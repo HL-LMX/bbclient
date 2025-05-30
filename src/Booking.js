@@ -70,13 +70,13 @@ export const Booking = () => {
     // eslint-disable-next-line
   }, [currentDate]);
 
-  const refreshAvailableDishes = () => {
-    const selectedDate = currentDate.toISOString().split('T')[0];
-    fetch(`${bookingVariables.API_URL}booking/week/?date=${selectedDate}`)
-      .then(response => response.json())
-      .then(data => setAvailableDishes(data.dishes))
-      .catch(error => console.error('Error:', error));
-  };
+    const refreshAvailableDishes = () => {
+        const selectedDate = currentDate.toISOString().split('T')[0];
+        fetch(bookingVariables.API_URL + 'booking/week/?date=' + selectedDate, { cache: "no-store" })
+        .then(response => response.json())
+        .then(data => setAvailableDishes(data.dishes))
+        .catch(error => console.error('Error:', error));
+    };
 
   const handleDateChange = days => {
     const newDate = new Date(currentDate);
