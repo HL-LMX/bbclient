@@ -2,7 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import { Home } from './Home';
 import { MenuManagement } from './MenuManagement';
-import { Booking } from './Booking';
+import Booking from './Booking';
+
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 
 function App() {
