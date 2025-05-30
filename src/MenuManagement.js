@@ -22,7 +22,7 @@ export const MenuManagement = () => {
     const [dishes, setDishes] = useState([]);
     const [attendees, setAttendees] = useState(0);
     const allowedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    const lockedDaysAhead = -1; // Days locked from today (no editing past days)
+    const lockedDaysAhead = 1; // Days locked from today (no editing past days)
 
     useEffect(() => {
         fetchDishes(selectedDate);
@@ -163,11 +163,16 @@ export const MenuManagement = () => {
                     Next Day
                 </button>
             </div>
+
             <div className="menu-sections">
+
                 <div className="bg-secondary text-light rounded p-3">
+
                     <h4 className="text-center">Calendar</h4>
                     <MuiCalendar currentDate={selectedDate} onChange={handleCalendarChange} />
+                    
                 </div>
+
                 {Object.keys(categories).map(category => (
                     <CourseComponent
                         key={category}
