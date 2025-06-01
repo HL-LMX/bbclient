@@ -97,7 +97,12 @@ const CourseComponent = ({
                 ))}
 
                 {/* DishInputComponent for adding new dishes */}
-                {!isPastDate && <DishInputComponent onSave={handleSave} />}
+                {!isPastDate && 
+                    <DishInputComponent 
+                        onSave={handleSave} 
+                        category={category}
+                    />
+                }
             </div>
         </div>
     );

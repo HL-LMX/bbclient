@@ -54,36 +54,52 @@ export const MenuManagement = () => {
         setAttendees(attendance !== null && attendance !== undefined ? attendance : 0);
     };
 
+
     const handleSave = async (category, data) => {
+
         const apiUrl = variables.API_URL + 'chef-management/create/';
-        const newDishData = {
+
+        // If data.existing_dish_id is present, we just send that
+        let payload;
+        if (data.existing_dish_id) {
+            payload = {
+            existing_dish_id: data.existing_dish_id,
+            dates: [this.state.selectedDate.toISOString().split('T')[0]]
+            };
+        } else if (data.dish) {
+            // Child already gave us { dish: { … } }, but we must inject dish_type = category
+            payload = {
             dish: {
-                dish_name: data.dishName,
-                dish_description: 'Healthy',
-                dish_type: category,
-                dish_calories: data.calories,
-                light_healthy: data.isHealthy,
-                sugar_free: data.isSugarFree
+                ...data.dish,
+                dish_type: category
             },
-            dates: [selectedDate.toISOString().split('T')[0]]
-        };
+            dates: [this.state.selectedDate.toISOString().split('T')[0]]
+            };
+        } else {
+            console.error('Unexpected payload in handleSave:', data);
+            return;
+        }
 
         try {
             const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newDishData),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
             });
+
             if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error('Error response from server:', errorResponse);
-                throw new Error(`HTTP error! Status: ${response.status}`);
+            const errorJson = await response.json();
+            console.error('Server error:', errorJson);
+            throw new Error(`HTTP ${response.status}`);
             }
-            fetchDishes(selectedDate);
+
+            // Refresh the dishes list for the date
+            this.fetchDishes(this.state.selectedDate);
         } catch (error) {
-            console.error('Error creating new dish:', error);
+            console.error('Error in handleSave:', error);
         }
     };
+
 
     const handleDateChange = async (days) => {
         const newDate = new Date(selectedDate);
