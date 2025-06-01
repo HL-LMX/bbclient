@@ -90,25 +90,27 @@ const DishInputComponent = ({ onSave, isPastDate, category }) => {
 
         // A) If user picked an existing dish AND didn’t edit any field thereafter
         if (selectedDishId && !fieldsEditedAfterSelect) {
-        onSave({
-            existing_dish_id: selectedDishId,
-            // dates will be appended by parent (MenuManagement) automatically if needed, 
-            // or the parent’s handleSave can wrap this payload accordingly.
-        });
+
+            console.log('Re‐using existing dish ID:', selectedDishId);
+            onSave({
+                existing_dish_id: selectedDishId,
+                // dates will be appended by parent (MenuManagement) automatically if needed, 
+                // or the parent’s handleSave can wrap this payload accordingly.
+            });
         }
         // B) Otherwise, create a brand-new dish
         else {
-        onSave({
-            dish: {
-            dish_name: dishName,
-            dish_description: '',    // you can default or allow user to fill a description later
-            dish_type: '',           // parent knows category; parent’s handleSave should inject `dish_type`
-            dish_calories: parseInt(calories, 10) || 0,
-            light_healthy: isHealthy,
-            sugar_free: isSugarFree,
-            },
-            // parent’s handleSave will add: dates: [selectedDate]
-        });
+            onSave({
+                dish: {
+                dish_name: dishName,
+                dish_description: '',    // you can default or allow user to fill a description later
+                dish_type: '',           // parent knows category; parent’s handleSave should inject `dish_type`
+                dish_calories: parseInt(calories, 10) || 0,
+                light_healthy: isHealthy,
+                sugar_free: isSugarFree,
+                },
+                // parent’s handleSave will add: dates: [selectedDate]
+            });
         }
 
         // Reset all states
@@ -166,17 +168,43 @@ const DishInputComponent = ({ onSave, isPastDate, category }) => {
                             key={sug.dish_id}
                             onClick={() => handleSuggestionClick(sug)}
                             style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr auto auto auto',
+                            alignItems: 'center',
                             padding: '8px',
                             cursor: 'pointer',
-                            borderBottom: '1px solid #eee'
+                            borderBottom: '1px solid #eee',
                             }}
                         >
+                            {/* 1. Dish name + calories */}
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
                             <span style={{ fontWeight: 'bold' }}>{sug.dish_name}</span>
                             {sug.dish_calories != null && (
-                            <span style={{ marginLeft: '8px', fontSize: '0.9em', color: '#666' }}>
+                                <span style={{ marginLeft: '8px', fontSize: '0.9em', color: '#666' }}>
                                 ({sug.dish_calories} cal)
-                            </span>
+                                </span>
                             )}
+                            </div>
+
+                            {/* 2. “Light & Healthy” checkbox (disabled) */}
+                            <div style={{ textAlign: 'center' }}>
+                            <input
+                                type="checkbox"
+                                checked={sug.light_healthy}
+                                disabled
+                                style={{ pointerEvents: 'none' }}
+                            />
+                            </div>
+
+                            {/* 3. “Sugar-Free” checkbox (disabled) */}
+                            <div style={{ textAlign: 'center', margin: '0 8px' }}>
+                            <input
+                                type="checkbox"
+                                checked={sug.sugar_free}
+                                disabled
+                                style={{ pointerEvents: 'none' }}
+                            />
+                            </div>
                         </li>
                         ))}
                     </ul>

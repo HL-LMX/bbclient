@@ -56,29 +56,35 @@ export const MenuManagement = () => {
 
 
     const handleSave = async (category, data) => {
-
+        // 1. build the endpoint URL
         const apiUrl = variables.API_URL + 'chef-management/create/';
+        // 2. grab the current date from state (no "this.state")
+        const formattedDate = selectedDate.toISOString().split('T')[0];
 
-        // If data.existing_dish_id is present, we just send that
         let payload;
         if (data.existing_dish_id) {
+            // Case A: re‐use an existing Dish
             payload = {
             existing_dish_id: data.existing_dish_id,
-            dates: [this.state.selectedDate.toISOString().split('T')[0]]
+            dates: [formattedDate]
             };
-        } else if (data.dish) {
-            // Child already gave us { dish: { … } }, but we must inject dish_type = category
+        }
+        else if (data.dish) {
+            // Case B: create a brand‐new Dish (inject the category)
             payload = {
             dish: {
                 ...data.dish,
                 dish_type: category
             },
-            dates: [this.state.selectedDate.toISOString().split('T')[0]]
+            dates: [formattedDate]
             };
-        } else {
+        }
+        else {
             console.error('Unexpected payload in handleSave:', data);
             return;
         }
+        console.log('Payload to backend:', payload);
+
 
         try {
             const response = await fetch(apiUrl, {
@@ -86,19 +92,19 @@ export const MenuManagement = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
             });
-
             if (!response.ok) {
-            const errorJson = await response.json();
-            console.error('Server error:', errorJson);
+            const err = await response.json();
+            console.error('Server error:', err);
             throw new Error(`HTTP ${response.status}`);
             }
-
-            // Refresh the dishes list for the date
-            this.fetchDishes(this.state.selectedDate);
-        } catch (error) {
-            console.error('Error in handleSave:', error);
+            // 3. once it’s saved, refresh the list using the hook version
+            await fetchDishes(selectedDate);
+        }
+        catch (e) {
+            console.error('Error in handleSave:', e);
         }
     };
+
 
 
     const handleDateChange = async (days) => {
@@ -120,7 +126,7 @@ export const MenuManagement = () => {
         return days[date.getDay()];
     };
 
-    const handleDelete = async (dishId, dateHasDishId) => {
+    const handleDelete = async (dateHasDishId) => {
         const apiUrl = variables.API_URL + 'chef-management/delete-dish-from-date/';
         try {
             const response = await fetch(apiUrl, {

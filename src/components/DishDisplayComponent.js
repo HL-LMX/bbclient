@@ -15,7 +15,7 @@ const DishDisplayComponent = ({
   isPastDate
 }) => {
     const handleDelete = () => {
-        onDelete(dish.dish.dish_id, dish.date_has_dish_id);
+        onDelete(dish.date_has_dish_id);
     };
 
     return (

@@ -91,7 +91,7 @@ const CourseComponent = ({
                     <DishDisplayComponent
                         key={dish.dish.dish_id}
                         dish={dish}
-                        onDelete={(dishId, dateHasDishId) => onDelete(category, dishId, dateHasDishId)}
+                        onDelete={(dateHasDishId) => onDelete(dateHasDishId)}
                         isPastDate={isPastDate}
                     />
                 ))}
@@ -101,6 +101,7 @@ const CourseComponent = ({
                     <DishInputComponent 
                         onSave={handleSave} 
                         category={category}
+                        isPastDate={isPastDate}
                     />
                 }
             </div>
