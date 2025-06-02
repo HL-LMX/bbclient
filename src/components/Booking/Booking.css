@@ -1,60 +1,140 @@
-/* src/Booking.css */
+/* File: src/components/Booking/Booking.css
+   Styles for Booking component (merged global + component-specific rules).
+*/
 
-/* Arrow button styling */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Arrow button styling (restored original padding, font-size, and drop-shadow) */
+/* ────────────────────────────────────────────────────────────────────────── */
 .arrow-button {
-    padding: 10px 20px;
+    padding: 1rem 1.5rem;
     font-size: 1em;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.4s ease, box-shadow 0.4s ease;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 7px 10px rgba(0, 0, 0, 0.3);
 }
 
 .arrow-button:hover {
     background-color: #ddd;
 }
 
-.arrow-button:active {
-    box-shadow: none;
-}
-
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Save-button styling (unchanged) */
+/* ────────────────────────────────────────────────────────────────────────── */
 .save-button {
-    padding: 15px 30px;
-    font-size: 1.2em;
-    background-color: rgb(52, 156, 52);
-    color: #fff;
+    font-weight: bold;
+    padding: 1rem 2.5rem;
     border: none;
+    background-color: #28a745;
+    color: white;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.4s ease, box-shadow 0.4s ease;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 7px 10px rgba(0, 0, 0, 0.3);
 }
 
 .save-button:hover {
-    background-color: rgb(1, 111, 1);
+    background-color: #1e7e34;
 }
 
-.save-button:active {
-    box-shadow: none;
-}
-
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Popup styling (unchanged) */
+/* ────────────────────────────────────────────────────────────────────────── */
 .popup {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 9999;
-    border-radius: 10px;
-    width: 20rem;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
 }
 
 .popup-message {
-    font-size: 20px;
-    color: #00ad0e;
-    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Component-specific styles transferred (from previous module) */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Title (“Menu Calendar”) heading.
+ */
+.title {
+    text-align: center;
+    font-size: 32px;
+    margin: 1rem 0;
+}
+
+/**
+ * Wrapper for the "< Previous Week" / "Next Week >" buttons and week label.
+ */
+.navigation {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 1rem 0;
+}
+
+/**
+ * Adjusts only the font-size of the arrow buttons when used alongside .arrow-button.
+ */
+.navigationButton {
+    font-size: 1rem;
+}
+
+/**
+ * The label showing "DD MMM - DD MMM".
+ */
+.weekLabel {
+    margin: 0 10px;
+    width: 200px;
+    display: inline-block;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/**
+ * Container for the “Remember to rate…” reminder text.
+ */
+.reminderContainer {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+/**
+ * Larger reminder text: “Remember to rate the dishes you ate…”
+ */
+.reminderTextLarge {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+/**
+ * Smaller follow-up reminder text.
+ */
+.reminderTextSmall {
+    font-size: 1rem;
+    margin: 1rem 0;
+}
+
+/**
+ * Container wrapping the “Save Attendance” button + popup.
+ */
+.saveContainer {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+/**
+ * Grid containing the five <Day> cards.
+ */
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 20px;
 }

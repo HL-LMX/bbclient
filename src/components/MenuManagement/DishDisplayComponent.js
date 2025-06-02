@@ -37,16 +37,16 @@ const DishDisplayComponent = ({
                     color: 'black',
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'center',                  alignItems: 'center',
-                    visibility: dish.average_rating !== null ? 'visible' : 'hidden'
+                    justifyContent: 'center',                  
+                    alignItems: 'center',
                 }}
-            >
-                <span>{dish.average_rating?.toFixed(1) ?? '0.0'} ⭐️ ({dish.rating_count ?? 0})</span>
-                {/* <span>{dish.rating_count ?? 0} 👨‍💼</span> */}
+    >
+                {dish.average_rating !== null ? (
+                    <span>{dish.average_rating.toFixed(1)} ⭐️ ({dish.rating_count ?? 0})</span>
+                ) : (
+                    <span>-</span>
+                )}
             </div>
-
-
-
         ) : (
             <button
             onClick={handleDelete}

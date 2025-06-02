@@ -1,7 +1,7 @@
 // src/MenuManagement.js
 
 
-import {API_URL, API_ENDPOINTS, DAYS_OF_WEEK}  from '../../utils/constants';
+import {API_URL, API_ENDPOINTS, DAYS_OF_WEEK, CHEF_LOCKED_DAYS_AHEAD}  from '../../utils/constants';
 import React, { useState, useEffect } from 'react';
 import MuiCalendar from './MuiCalendar';
 import CourseComponent from './CourseComponent';
@@ -22,7 +22,6 @@ export const MenuManagement = () => {
     const [selectedDate, setSelectedDate] = useState(() => new Date(currentDate));
     const [dishes, setDishes] = useState([]);
     const [attendees, setAttendees] = useState(0);
-    const lockedDaysAhead = 1; // Days locked from today (no editing past days)
 
     useEffect(() => {
         fetchDishes(selectedDate);
@@ -160,7 +159,7 @@ export const MenuManagement = () => {
     });
 
     const modificationDueDate = new Date();
-    modificationDueDate.setDate(modificationDueDate.getDate() + lockedDaysAhead);
+    modificationDueDate.setDate(modificationDueDate.getDate() + CHEF_LOCKED_DAYS_AHEAD);
     const isPastDate = selectedDate < modificationDueDate;
 
 
