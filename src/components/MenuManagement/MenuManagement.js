@@ -1,7 +1,8 @@
 // src/MenuManagement.js
 
+
+import {API_URL, API_ENDPOINTS, DAYS_OF_WEEK}  from '../../utils/constants';
 import React, { useState, useEffect } from 'react';
-import { variables } from '../../utils/Variables';
 import MuiCalendar from './MuiCalendar';
 import CourseComponent from './CourseComponent';
 import './MenuManagement.css';
@@ -21,7 +22,6 @@ export const MenuManagement = () => {
     const [selectedDate, setSelectedDate] = useState(() => new Date(currentDate));
     const [dishes, setDishes] = useState([]);
     const [attendees, setAttendees] = useState(0);
-    const allowedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const lockedDaysAhead = 1; // Days locked from today (no editing past days)
 
     useEffect(() => {
@@ -31,10 +31,11 @@ export const MenuManagement = () => {
 
     const fetchDishes = async (date) => {
         const formattedDate = date.toISOString().split('T')[0];
-        const apiUrl = variables.API_URL + `chef-management/day-dishes/${formattedDate}/`;
+        const endpoint = `${API_URL}${API_ENDPOINTS.CHEF_DAY_DISHES(formattedDate)}`;
+
 
         try {
-            const response = await fetch(apiUrl, { cache: "no-store" });
+            const response = await fetch(endpoint, { cache: "no-store" });
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             const data = await response.json();
             updateDishes(data);
@@ -57,7 +58,7 @@ export const MenuManagement = () => {
 
     const handleSave = async (category, data) => {
         // 1. build the endpoint URL
-        const apiUrl = variables.API_URL + 'chef-management/create/';
+        const endpoint = API_URL + API_ENDPOINTS.CHEF_CREATE_DISH;
         // 2. grab the current date from state (no "this.state")
         const formattedDate = selectedDate.toISOString().split('T')[0];
 
@@ -87,7 +88,7 @@ export const MenuManagement = () => {
 
 
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -110,7 +111,7 @@ export const MenuManagement = () => {
     const handleDateChange = async (days) => {
         const newDate = new Date(selectedDate);
         newDate.setDate(newDate.getDate() + days);
-        while (!allowedDays.includes(getDayName(newDate))) {
+        while (!DAYS_OF_WEEK.includes(getDayName(newDate))) {
             newDate.setDate(newDate.getDate() + (days > 0 ? 1 : -1));
         }
         setSelectedDate(newDate);
@@ -127,9 +128,9 @@ export const MenuManagement = () => {
     };
 
     const handleDelete = async (dateHasDishId) => {
-        const apiUrl = variables.API_URL + 'chef-management/delete-dish-from-date/';
+        const endpoint = API_URL + API_ENDPOINTS.CHEF_DELETE_DISH;
         try {
-            const response = await fetch(apiUrl, {
+            const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ date_has_dish_ids: [dateHasDishId] }),

@@ -1,6 +1,7 @@
 // src/components/Dish.js
+
+import {API_URL, API_ENDPOINTS}  from '../../utils/constants';
 import React, { useState, useEffect } from 'react';
-import { variables as bookingVariables } from '../../utils/Variables';
 import dayjs from 'dayjs';
 
 /**
@@ -40,7 +41,7 @@ const RatingStars = ({
       payload.new_rating = newRating;
     }
 
-    fetch(`${bookingVariables.API_URL}booking/rate/`, {
+    fetch(`${API_URL}${API_ENDPOINTS.RATE}`, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -58,7 +59,7 @@ const RatingStars = ({
   // DELETE rating (no-op if !editable)
   const handleDelete = () => {
     if (!editable) return;
-    fetch(`${bookingVariables.API_URL}booking/rate/`, {
+    fetch(`${API_URL}${API_ENDPOINTS.RATE}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

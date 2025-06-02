@@ -1,5 +1,6 @@
 import React from 'react';
 import Dish from './Dish';
+import { SATURATED_COLORS, DESATURATED_COLORS } from '../../utils/constants';
 
 /**
  * Day: Renders a single day's card in the booking grid.
@@ -13,20 +14,7 @@ const Day = ({
     isPastDate,
     onClick
 }) => {
-    const saturatedColors = {
-        Monday: '#2F0FAF',    // Dark Blue
-        Tuesday: '#940A59',   // Dark Magenta
-        Wednesday: '#E41057', // Vivid Red-Pink
-        Thursday: '#EC5E17',  // Bright Orange
-        Friday: '#FFBD00',    // Vibrant Yellow
-    };
-    const desaturatedColors = {
-        Monday: '#BBA6D6',    // Desaturated Deep Purple
-        Tuesday: '#D5A5BB',   // Desaturated Magenta
-        Wednesday: '#FFB3C1', // Light Pink
-        Thursday: '#FFC2A6',  // Light Orange
-        Friday: '#FFE7A8',    // Pale Yellow
-    };
+
 
 
     let titleColor = '';
@@ -35,11 +23,11 @@ const Day = ({
     if (isSelected && !isPastDate) {
         // Selected Future day
         titleColor = 'white';
-        backgroundColor = saturatedColors[dayName];
+        backgroundColor = SATURATED_COLORS[dayName];
     } else if (isSelected && isPastDate) {
         // Selected past day
         titleColor = 'grey';
-        backgroundColor = desaturatedColors[dayName];
+        backgroundColor = DESATURATED_COLORS[dayName];
     } else if (isPastDate) {
         // Past day
         titleColor = 'grey';
@@ -47,7 +35,7 @@ const Day = ({
     } else {
         // Future day
         titleColor = 'black';
-        backgroundColor = desaturatedColors[dayName] || '#FFFFFF';
+        backgroundColor = DESATURATED_COLORS[dayName] || '#FFFFFF';
     }
 
     // Order of dish types

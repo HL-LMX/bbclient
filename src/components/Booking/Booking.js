@@ -1,7 +1,7 @@
 // src/Booking.js
 
+import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK } from '../../utils/constants';
 import React, { useState, useEffect } from 'react';
-import { variables as bookingVariables } from '../../utils/Variables';
 import Day from './Day';
 
 import './Booking.css';
@@ -18,10 +18,10 @@ const PopupMessage = ({ message }) => (
 /**
  * Calculates available dishes grouped by day and type for the week.
  */
-const calculateAvailableDishesByDayAndType = (currentDate, availableDishes, daysOfWeek) => {
+const calculateAvailableDishesByDayAndType = (currentDate, availableDishes, DAYS_OF_WEEK) => {
   const availableDishesByDayAndType = {};
 
-  daysOfWeek.forEach(day => {
+  DAYS_OF_WEEK.forEach(day => {
     availableDishesByDayAndType[day] = availableDishes
       .filter(dish => {
         const dishDate = new Date(dish.date + 'T00:00:00Z');
@@ -73,7 +73,7 @@ export const Booking = () => {
 
     const refreshAvailableDishes = () => {
         const selectedDate = currentDate.toISOString().split('T')[0];
-        fetch(bookingVariables.API_URL + 'booking/week/?date=' + selectedDate, { cache: "no-store" })
+        fetch(`${API_URL}${API_ENDPOINTS.DISHES_AVAILABLE_WEEK(selectedDate)}`, { cache: 'no-store' })
         .then(response => response.json())
         .then(data => setAvailableDishes(data.dishes))
         .catch(error => console.error('Error:', error));
@@ -109,7 +109,7 @@ export const Booking = () => {
   };
 
   const addToAttendance = dates => {
-    fetch(`${bookingVariables.API_URL}booking/add-attendance/`, {
+    fetch(`${API_URL}${API_ENDPOINTS.ADD_ATTENDANCE}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dates),
@@ -123,7 +123,7 @@ export const Booking = () => {
   };
 
   const removeFromAttendance = dates => {
-    fetch(`${bookingVariables.API_URL}booking/remove-attendance/`, {
+    fetch(`${API_URL}${API_ENDPOINTS.REMOVE_ATTENDANCE}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dates),
@@ -146,13 +146,12 @@ export const Booking = () => {
     });
   };
 
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
   // Calculate first (Monday) and last (Friday) day of the week
   const firstDayOfWeek = new Date(currentDate);
   firstDayOfWeek.setDate(firstDayOfWeek.getDate() - firstDayOfWeek.getDay() + 1);
   const lastDayOfWeek = new Date(firstDayOfWeek);
-  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + daysOfWeek.length - 1);
+  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + DAYS_OF_WEEK.length - 1);
 
   // Show Save Attendance if this week still has at least one day on or after today
   const today = new Date();
@@ -165,7 +164,7 @@ export const Booking = () => {
   const availableDishesByDayAndType = calculateAvailableDishesByDayAndType(
     currentDate,
     availableDishes,
-    daysOfWeek
+    DAYS_OF_WEEK
   );
 
   const popup = changesSaved ? <PopupMessage message="Changes saved" /> : null;
@@ -210,7 +209,7 @@ export const Booking = () => {
 
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridGap: '20px' }}>
-        {daysOfWeek.map((day, index) => {
+        {DAYS_OF_WEEK.map((day, index) => {
           const dayDate = new Date(firstDayOfWeek);
           dayDate.setDate(dayDate.getDate() + index);
 
