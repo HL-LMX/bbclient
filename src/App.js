@@ -3,71 +3,80 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import './App.css';
-import { Home } from './pages/Home/Home.js';
+import { Home } from './pages/Home';
 import { MenuManagement } from './components/MenuManagement/MenuManagement';
 import { Booking } from './components/Booking/Booking';
-import NotFound from './pages/NotFound'; // This should be created as NotFound.js in your project
+import NotFound from './pages/NotFound';
 
 /**
- * App Component: Main entry point for BookingBite frontend.
- * Handles routing, global layout, and navigation.
+ * App Component: Main entry point for Booking Bite Mx frontend.
+ * Handles routing, global layout, navigation (left‐aligned buttons), and footer.
  */
 const App = () => {
   return (
     <BrowserRouter>
-      <div>
-        {/* Header Section */}
-        <header
-          className="App"
-          style={{
-            backgroundColor: '#F79800',
-            width: '100%',
-            height: '200px',
-            display: 'flex',
-            justifyContent: 'center',
-            padding: '20px'
-          }}
-        >
-          <div style={{ color: 'white', maxWidth: '1200px', width: '100%' }}>
-            <h1 className="text-center m-3">Booking Bite Mx</h1>
-            <nav className="navbar navbar-expand-sm navbar-dark">
-              <ul className="navbar-nav">
-                <li className="nav-item- m-1">
-                  <NavLink className="btn btn-light btn-outline" to="/bookingbite">
-                    Home
-                  </NavLink>
-                </li>
-                <li className="nav-item- m-1">
-                  <NavLink className="btn btn-light btn-outline" to="/bookingbite/booking">
-                    Menu Calendar
-                  </NavLink>
-                </li>
-              </ul>
-            </nav>
-          </div>
+      <div className="App">
+        {/* ─────────────────────────────────────────────────────────────────── */}
+        {/* Header: Title + Left-Aligned Button Nav                             */}
+        {/* ─────────────────────────────────────────────────────────────────── */}
+        <header>
+          {/* Page Title */}
+          <h1 className="text-center m-3">Booking Bite Mx</h1>
+
+          {/* Navigation Buttons (aligned left) */}
+          <nav>
+            <ul>
+              <li>
+                <NavLink
+                  to="/home"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-button active-nav' : 'nav-button'
+                  }
+                >
+                  Home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/bookingbite/menu-management"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-button active-nav' : 'nav-button'
+                  }
+                >
+                  Menu Management
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/bookingbite/booking"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-button active-nav' : 'nav-button'
+                  }
+                >
+                  Booking
+                </NavLink>
+              </li>
+            </ul>
+          </nav>
         </header>
 
-        {/* Main Content Routes */}
+        {/* ─────────────────────────────────────────────────────────────────── */}
+        {/* Main Content (Routes)                                              */}
+        {/* ─────────────────────────────────────────────────────────────────── */}
         <main>
           <Routes>
-            <Route path="/" element={<Navigate to="/bookingbite" />} />
-            <Route path="/bookingbite/" element={<Home />} />
-            <Route path="/bookingbite/booking" element={<Booking />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/bookingbite/menu-management" element={<MenuManagement />} />
+            <Route path="/bookingbite/booking" element={<Booking />} />
+            <Route path="/" element={<Navigate replace to="/home" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
 
-        {/* Footer Section */}
-        <footer
-          style={{
-            backgroundColor: '#FFA81C',
-            color: 'white',
-            textAlign: 'center',
-            padding: '30px',
-            margin: '50px 0 0'
-          }}
-        >
+        {/* ─────────────────────────────────────────────────────────────────── */}
+        {/* Footer: original yellow background, dimensions, and typography     */}
+        {/* ─────────────────────────────────────────────────────────────────── */}
+        <footer className="app-footer">
           Hapag-Lloyd México 2024
         </footer>
       </div>

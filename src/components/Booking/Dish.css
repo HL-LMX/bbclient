@@ -1,0 +1,94 @@
+/* File: src/components/Dish/Dish.css
+   Replaces all inline styles from Dish.js with class-based rules.
+*/
+
+/**
+ * Layout for each dish row: two columns (name / calories), gap and bottom margin.
+ */
+.dish-row {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/**
+ * Centers calorie text.
+ */
+.dish-calories {
+    text-align: center;
+}
+
+/**
+ * Container for the RatingStars component: pulls it full-width and aligns stars.
+ */
+.rating-container {
+    margin-top: -1em;
+    display: flex;
+    align-items: center;
+}
+
+/**
+ * When rating is shown full-row (spanning both columns).
+ */
+.rating-full-row {
+    grid-column: 1 / -1;
+}
+
+/**
+ * Delete‐rating button: no padding, no border, and pointer cursor.
+ */
+.rating-delete-button {
+    margin-left: 12px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/**
+ * Base styling for each star (font-size and right margin).
+ */
+.star {
+    font-size: 1.4rem;
+    margin-right: 4px;
+}
+
+/**
+ * Editable + filled star is gold.
+ */
+.star.editable.filled {
+    color: #DAA520;
+}
+
+/**
+ * Editable + empty star is black.
+ */
+.star.editable.empty {
+    color: #000;
+}
+
+/**
+ * Read-only + filled star is grey.
+ */
+.star.readonly.filled {
+    color: grey;
+}
+
+/**
+ * Read-only + empty star is lightgrey.
+ */
+.star.readonly.empty {
+    color: lightgrey;
+}
+
+/**
+ * Dish name or calories text color variants.
+ */
+.text-grey {
+    color: grey;
+}
+
+.text-black {
+    color: black;
+}

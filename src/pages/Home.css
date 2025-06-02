@@ -1,0 +1,42 @@
+/* File: src/pages/Home.css
+   Styles for the Home landing page, replacing inline style props.
+*/
+
+/* Title (“Version 1.2”), centered with margin */
+.home-title {
+    font-size: 2rem;      /* equivalent to m-5 spacing on <h3> */
+    margin: 3rem 0;       /* matches className="m-5" */
+    text-align: center;
+}
+
+/* Card body text: “On this site, you can:” */
+.home-card-text {
+    font-size: 1.5em;
+    text-align: left;
+}
+
+/* List items under the card, for each feature */
+.home-list-item {
+    font-size: 1.2em;
+    text-align: left;
+    list-style: disc inside;
+    background-color: transparent; /* override default list-group-item bg */
+    border: none;                  /* remove default border in list-group-item */
+    padding-left: 0;               /* remove extra padding */
+}
+
+/* SVG path fills */
+.svg-orange {
+    fill: #FF6600;
+}
+
+.svg-lightorange {
+    fill: #FF822D;
+}
+
+/* Center and size the SVG icon container */
+.home-svg-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

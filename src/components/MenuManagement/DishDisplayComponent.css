@@ -1,0 +1,102 @@
+/* File: src/components/DishDisplayComponent.css
+   Replaces all static inline styles in DishDisplayComponent.js with class-based rules.
+*/
+
+/**
+ * Root grid container for each dish row:
+ *   display: grid;
+ *   grid-template-columns: repeat(12, 1fr);
+ *   margin-bottom: 1em;
+ *   gap: 0.8em;
+ */
+.dish-display-row {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    margin-bottom: 1em;
+    gap: 0.8em;
+}
+
+/**
+ * Cell that shows average rating (past dates only):
+ *   grid-column: span 2;
+ *   font-size: 1.1rem;
+ *   color: black;
+ *   display: flex;
+ *   flex-direction: row;
+ *   justify-content: center;
+ *   align-items: center;
+ */
+.average-rating-cell {
+    grid-column: span 2;
+    font-size: 1.1rem;
+    color: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/**
+ * Cell container for the delete‐button (future dates only):
+ *   grid-column: span 1;
+ */
+.delete-button-cell {
+    grid-column: span 1;
+}
+
+/**
+ * The delete <button> itself—no background, no border, pointer cursor.
+ */
+.delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/**
+ * Dish name input (read‐only):
+ *   grid-column: span 6;
+ *   padding: 3px 8px;
+ *   font-weight: bold;
+ *   font-size: 14px;
+ *   font-family: Arial, sans-serif;
+ *   color: black;
+ */
+.dish-name-input {
+    grid-column: span 6;
+    padding: 3px 8px;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    color: black;
+}
+
+/**
+ * Calories input (read‐only):
+ *   grid-column: span 2;
+ *   padding: 3px 8px;
+ *   font-weight: bold;
+ *   font-size: 14px;
+ *   font-family: Arial, sans-serif;
+ *   color: black;
+ *   width: 100%;
+ *   text-align: right;
+ */
+.calories-input-display {
+    grid-column: span 2;
+    padding: 3px 8px;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    color: black;
+    width: 100%;
+    text-align: right;
+}
+
+/**
+ * Checkbox cells (both “Light & Healthy” and “Sugar Free”):
+ *   grid-column: span 1;
+ */
+.checkbox-cell {
+    grid-column: span 1;
+}

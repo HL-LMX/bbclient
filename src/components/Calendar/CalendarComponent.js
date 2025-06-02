@@ -1,10 +1,14 @@
-// src/components/CalendarComponent.js
+// File: src/components/CalendarComponent.js
+// Simple month‐view calendar for date selection. All fixed cell sizes moved to CSS.
 
 import React, { useState } from 'react';
 import './CalendarComponent.css';
 
 /**
- * CalendarComponent: Simple month-view calendar for date selection.
+ * CalendarComponent: Renders a month‐view calendar with clickable days.
+ *
+ * @param {Date}    currentDate  Currently selected date.
+ * @param {function} onChange    Callback invoked with a new Date when user clicks a cell.
  */
 const CalendarComponent = ({ currentDate, onChange }) => {
     const [currentMonth, setCurrentMonth] = useState(currentDate || new Date());
@@ -39,20 +43,33 @@ const CalendarComponent = ({ currentDate, onChange }) => {
         const endDate = new Date(monthEnd);
         const cells = [];
 
+        // Blank cells for days before month starts
         const startDayOfWeek = startDate.getDay();
         for (let i = 0; i < startDayOfWeek; i++) {
-            cells.push(<div key={`blank-${i}`} className="cell blank-cell"></div>);
+            cells.push(
+                <div
+                    key={`blank-${i}`}
+                    className="cell blank-cell"
+                />
+            );
         }
 
-        const cellSize = '2em';
+        // Helper to compare without time
+        const isSameDay = (date1, date2) => (
+            date1.getDate() === date2.getDate() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getFullYear() === date2.getFullYear()
+        );
+
+        // Render each day cell
         while (startDate <= endDate) {
             const isToday = isSameDay(startDate, new Date());
             const isSelected = isSameDay(startDate, currentDate);
+
             cells.push(
                 <div
                     key={startDate.toISOString()}
                     className={`cell${isToday ? ' today' : ''}${isSelected ? ' selected' : ''}`}
-                    style={{ height: cellSize, width: cellSize }}
                     onClick={() => handleCellClick(new Date(startDate))}
                 >
                     {startDate.getDate()}
@@ -63,14 +80,10 @@ const CalendarComponent = ({ currentDate, onChange }) => {
         return cells;
     };
 
-    const isSameDay = (date1, date2) => (
-        date1.getDate() === date2.getDate() &&
-        date1.getMonth() === date2.getMonth() &&
-        date1.getFullYear() === date2.getFullYear()
-    );
-
     const handleCellClick = (selectedDate) => {
-        onChange && onChange(selectedDate);
+        if (onChange) {
+            onChange(selectedDate);
+        }
     };
 
     const changeMonth = (delta) => {
@@ -82,17 +95,23 @@ const CalendarComponent = ({ currentDate, onChange }) => {
     const goToToday = () => {
         const today = new Date();
         setCurrentMonth(today);
-        onChange && onChange(today);
+        if (onChange) {
+            onChange(today);
+        }
     };
 
     return (
         <div>
             {renderHeader()}
+
             <div className="calendar-grid">
                 {renderDays()}
                 {renderCells()}
             </div>
-            <button className="btn btn-primary" onClick={goToToday}>Today</button>
+
+            <button className="btn btn-primary" onClick={goToToday}>
+                Today
+            </button>
         </div>
     );
 };
