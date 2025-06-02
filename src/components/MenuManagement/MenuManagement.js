@@ -3,7 +3,7 @@
 // We replicate the exact “look” of the buttons and date label from the original,
 // and ensure that fetchDishes runs whenever selectedDate changes (so the UI updates).
 
-import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK } from '../../utils/constants';
+import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK, CHEF_LOCKED_DAYS_AHEAD} from '../../utils/constants';
 import React, { useState, useEffect } from 'react';
 import MuiCalendar from './MuiCalendar';
 import CourseComponent from './CourseComponent';
@@ -34,9 +34,7 @@ export const MenuManagement = () => {
   const [dishes, setDishes] = useState([]);
   const [attendees, setAttendees] = useState(0);
 
-  // 3) Lock editing if the date is too far in the past
-  const lockedDaysAhead = 1;
-
+  
   // 4) Whenever selectedDate changes, fetch that day’s dishes + attendance
   useEffect(() => {
     fetchDishes(selectedDate);
@@ -214,11 +212,11 @@ export const MenuManagement = () => {
     }
   });
 
-  // Determine if selectedDate is “past” (lockedDaysAhead)
+  // Determine if selectedDate is “past” (CHEF_LOCKED_DAYS_AHEAD)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const modificationDueDate = new Date();
-  modificationDueDate.setDate(today.getDate() - lockedDaysAhead);
+  modificationDueDate.setDate(today.getDate() + CHEF_LOCKED_DAYS_AHEAD);
   const isPastDate = selectedDate < modificationDueDate;
 
   // Format the “Weekday MMM DD” label exactly as before
