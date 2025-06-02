@@ -6,7 +6,7 @@ import './App.css';
 import { Home } from './pages/Home/Home.js';
 import { MenuManagement } from './components/MenuManagement/MenuManagement';
 import { Booking } from './components/Booking/Booking';
-import NotFound from './NotFound'; // This should be created as NotFound.js in your project
+import NotFound from './pages/NotFound'; // This should be created as NotFound.js in your project
 
 /**
  * App Component: Main entry point for BookingBite frontend.

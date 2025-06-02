@@ -1,7 +1,7 @@
 // src/Booking.js
 
 import React, { useState, useEffect } from 'react';
-import { variables as bookingVariables } from '../../Variables';
+import { variables as bookingVariables } from '../../utils/Variables';
 import Day from './Day';
 
 import './Booking.css';
