@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import debounce from 'lodash.debounce'; // (or your own debounce)
-import { variables } from '../Variables';
+import { variables } from '../../Variables';
 
 // Props: { onSave: (payload) => void, isPastDate }
 const DishInputComponent = ({ onSave, isPastDate, category }) => {

@@ -1,9 +1,9 @@
 // src/MenuManagement.js
 
 import React, { useState, useEffect } from 'react';
-import { variables } from './Variables';
-import MuiCalendar from './components/MuiCalendar';
-import CourseComponent from './components/CourseComponent';
+import { variables } from '../../Variables';
+import MuiCalendar from './MuiCalendar';
+import CourseComponent from './CourseComponent';
 import './MenuManagement.css';
 
 /**

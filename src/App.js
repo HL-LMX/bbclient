@@ -3,9 +3,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import './App.css';
-import { Home } from './Home';
-import { MenuManagement } from './MenuManagement';
-import { Booking } from './Booking';
+import { Home } from './pages/Home/Home.js';
+import { MenuManagement } from './components/MenuManagement/MenuManagement';
+import { Booking } from './components/Booking/Booking';
 import NotFound from './NotFound'; // This should be created as NotFound.js in your project
 
 /**

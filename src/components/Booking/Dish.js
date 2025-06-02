@@ -1,6 +1,6 @@
 // src/components/Dish.js
 import React, { useState, useEffect } from 'react';
-import { variables as bookingVariables } from '../Variables';
+import { variables as bookingVariables } from '../../Variables';
 import dayjs from 'dayjs';
 
 /**
