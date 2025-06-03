@@ -198,8 +198,7 @@ const Dish = ({ dish, isSelected }) => {
     return (
         <div className="dish-row">
             {/* Dish name (left column) */}
-            <div className={textColorClass}>{name}</div>
-
+            <div className={`${textColorClass} dish-name`}>{name}</div>
             {/* Calories (right column, centered) */}
             <div className={`dish-calories ${textColorClass}`}>
                 {calories}

@@ -85,6 +85,10 @@
 /**
  * Dish name or calories text color variants.
  */
+ .dish-name {
+    justify-self: start;
+    align-self: center;
+ }
 .text-grey {
     color: grey;
 }

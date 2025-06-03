@@ -57,7 +57,8 @@ const calculateAvailableDishesByDayAndType = (currentDate, availableDishes, DAYS
  *
  * - Fetches available dishes for each week.
  * - Tracks selected days (unsavedChanges) vs. persisted days (savedDays).
- * - Renders navigation controls, Save Attendance button, and a grid of <Day> elements.
+ * - Renders a 5-column top grid (empty, merged center, empty).
+ * - Renders a grid of <Day> elements.
  */
 export const Booking = () => {
     const [availableDishes, setAvailableDishes] = useState([]);
@@ -234,46 +235,60 @@ export const Booking = () => {
 
     return (
         <div>
-            <h3 className="title">Menu Calendar</h3>
+            {/* Top Grid: 5 Columns (empty, merged center, empty) */}
+            <div className="topGrid">
+                <div className="col-empty">
 
-            <div className="navigation">
-                <button
-                    onClick={() => handleDateChange(-7)}
-                    className="arrow-button navigationButton"
-                >
-                    &lt; Previous Week
-                </button>
+                </div>
 
-                <label className="weekLabel">{weekRange}</label>
+                <div className="col-center">
+                    <h3 className="title">Menu Calendar</h3>
 
-                <button
-                    onClick={() => handleDateChange(7)}
-                    className="arrow-button navigationButton"
-                >
-                    Next Week &gt;
-                </button>
-            </div>
-
-            <div className="reminderContainer">
-                <p className="reminderTextLarge">
-                    Remember to rate the dishes you ate with the new <b>rating option</b>*
-                </p>
-                <p className="reminderTextSmall">
-                    *Rating is only available on days with saved attendance.
-                </p>
-            </div>
-
-            <div className="saveContainer">
-                {hasActiveDays && (
-                    <>
-                        <button onClick={handleSave} className="save-button">
-                            Save Attendance
+                    <div className="navigation">
+                        <button
+                            onClick={() => handleDateChange(-7)}
+                            className="arrow-button navigationButton"
+                        >
+                            &lt; Previous Week
                         </button>
-                        {popup}
-                    </>
-                )}
+
+                        <label className="weekLabel">{weekRange}</label>
+
+                        <button
+                            onClick={() => handleDateChange(7)}
+                            className="arrow-button navigationButton"
+                        >
+                            Next Week &gt;
+                        </button>
+                    </div>
+
+                    
+
+                    <div className="saveContainer">
+                        {hasActiveDays && (
+                            <>
+                                <button onClick={handleSave} className="save-button">
+                                    Save Attendance
+                                </button>
+                                {popup}
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                <div className="col-empty" >
+                    <div className="reminderContainer">
+                        <p className="reminderTextLarge">
+                            Remember to rate the dishes you ate with the new <b>rating option</b>*
+                        </p>
+                        <p className="reminderTextSmall">
+                            *Rating is only available on days with saved attendance.
+                        </p>
+                    </div> 
+                </div>
             </div>
 
+            {/* Calendar Grid */}
             <div className="gridContainer">
                 {DAYS_OF_WEEK.map((day, index) => {
                     const dayDate = new Date(firstDayOfWeek);

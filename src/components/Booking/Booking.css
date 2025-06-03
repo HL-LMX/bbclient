@@ -3,37 +3,59 @@
 */
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Arrow button styling (restored original padding, font-size, and drop-shadow) */
+/* Top Grid: 5 columns (empty, merged center, empty)                         */
+/* ────────────────────────────────────────────────────────────────────────── */
+.topGrid {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr  /* five equal “slots”, but center will span 3 */
+                        1fr  /* placeholder */
+                        1fr;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.col-empty {
+    /* intentionally blank */
+}
+
+.col-center {
+    grid-column: 2 / 5;  /* Span columns 2, 3, and 4 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Arrow button styling                                                       */
 /* ────────────────────────────────────────────────────────────────────────── */
 .arrow-button {
-    padding: 1rem 1.5rem;
+    padding: 10px 20px;
     font-size: 1em;
-    background-color: #d8d8d8;
-    border: 0;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.4s ease, box-shadow 0.4s ease;
-    box-shadow: 5px 7px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 .arrow-button:hover {
-    background-color: #f4f4f4;
+    background-color: #ddd;
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Save-button styling (unchanged) */
+/* Save-button styling (unchanged)                                             */
 /* ────────────────────────────────────────────────────────────────────────── */
 .save-button {
-    /* font-weight: bold; */
-    font-size: 1.2rem;
-    padding: 1rem 2.5rem;
+    padding: 0.75rem 1.5rem;
+    margin: 1.5rem 0 0;
     border: none;
     background-color: #28a745;
     color: white;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
-    box-shadow: 5px 7px 10px rgba(0, 0, 0, 0.3);
+    font-size: 1.5rem;
 }
 
 .save-button:hover {
@@ -41,26 +63,26 @@
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Popup styling (unchanged) */
+/* Popup styling (unchanged)                                                   */
 /* ────────────────────────────────────────────────────────────────────────── */
 .popup {
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: #28a745;
+    background-color: #323232;
     color: #fff;
-    padding: 1.5rem 2rem;
+    padding: 1rem 1.5rem;
     border-radius: 4px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     z-index: 100;
 }
 
 .popup-message {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* Component-specific styles transferred (from previous module) */
+/* Component-specific styles transferred                                      */
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**
@@ -73,19 +95,14 @@
 }
 
 /**
- * Wrapper for the "< Previous Week" / "Next Week >" buttons and week label.
+ * Navigation container inside center column.
  */
 .navigation {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 1rem;
-    padding: 1rem 0;
-}
-
-/**
- * Adjusts only the font-size of the arrow buttons when used alongside .arrow-button.
- */
-.navigationButton {
-    font-size: 1rem;
 }
 
 /**
