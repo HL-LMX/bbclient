@@ -3,8 +3,9 @@
 
 
 // 1) API base URL
-export const API_URL = "http://127.0.0.1:8000/";
+// export const API_URL = "http://127.0.0.1:8000/";
 // export const API_URL = "/api/";
+export const API_URL = process.env.REACT_APP_API_URL;
 
 
 // 2) Locking logic for the Chef (e.g. days ahead)
