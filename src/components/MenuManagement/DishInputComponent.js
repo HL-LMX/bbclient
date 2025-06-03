@@ -1,8 +1,8 @@
 // src/components/DishInputComponent.js
 
+import {API_URL, API_ENDPOINTS}  from '../../utils/constants';
 import React, { useState, useRef, useEffect } from 'react';
 import debounce from 'lodash.debounce'; // (or your own debounce)
-import { variables } from '../Variables';
 
 // Props: { onSave: (payload) => void, isPastDate }
 const DishInputComponent = ({ onSave, isPastDate, category }) => {
@@ -29,7 +29,7 @@ const DishInputComponent = ({ onSave, isPastDate, category }) => {
         try {
             // Append both q=<query> and category=<category> to the URL:
             const url =
-                `${variables.API_URL}chef-management/search-dishes/?` +
+                `${API_URL}${API_ENDPOINTS.SEARCH_DISHES}` +
                 `q=${encodeURIComponent(query)}` +
                 (category ? `&category=${encodeURIComponent(category)}` : '');
 

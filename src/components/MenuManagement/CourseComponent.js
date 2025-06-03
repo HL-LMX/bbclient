@@ -1,12 +1,24 @@
-// src/components/CourseComponent.js
+// File: src/components/CourseComponent.js
+// Displays a section for a single course/category of dishes.
+// All static layout styles moved into CourseComponent.css.
 
 import React from 'react';
 import DishDisplayComponent from './DishDisplayComponent';
 import DishInputComponent from './DishInputComponent';
 
+import './CourseComponent.css';
+
 /**
  * CourseComponent: Displays a section for a single course/category of dishes.
  * Allows for listing and adding dishes within the given category.
+ *
+ * @param {Object} props
+ * @param {string} props.category    Course category (e.g., "Main Course").
+ * @param {string} props.title       Human-readable title for this section.
+ * @param {Array}  props.dishes      Array of dish objects to display.
+ * @param {Function} props.onSave    Callback(category, data) to save a new dish.
+ * @param {Function} props.onDelete  Callback(dateHasDishId) to delete an existing dish.
+ * @param {boolean}  props.isPastDate  Whether the parent date is in the past.
  */
 const CourseComponent = ({
     category,
@@ -16,8 +28,13 @@ const CourseComponent = ({
     onDelete,
     isPastDate
 }) => {
-
-    // Helper function to determine background color based on category and past date
+    /**
+     * getBackgroundColor: Chooses a background based on category and past/future.
+     *
+     * @param {string} category
+     * @param {boolean} isPastDate
+     * @returns {string} CSS-compatible color string.
+     */
     const getBackgroundColor = (category, isPastDate) => {
         const dayColors = {
             'Main Course': 'hsl(44, 100%, 67%)',    // Pastel yellow
@@ -27,63 +44,37 @@ const CourseComponent = ({
             'Water': 'hsl(211, 67%, 57%)'           // Hot pink
         };
         if (isPastDate) {
-            return 'grey'; // If the date is in the past, set background color to grey
+            return 'grey';
         } else {
             return dayColors[category] || 'light';
         }
     };
 
-    // Handles saving a new dish (passes up to parent)
+    /**
+     * handleSave: Wraps onSave to include category context.
+     *
+     * @param {Object} data  Data payload from DishInputComponent.
+     */
     const handleSave = (data) => {
         onSave(category, data);
     };
 
     return (
         <div
-            className="text-light rounded p-3"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: getBackgroundColor(category, isPastDate)
-            }}
+            className="course-container text-light rounded p-3"
+            style={{ background: getBackgroundColor(category, isPastDate) }}
         >
             <div>
                 {/* Section title */}
                 <h4 className="text-center">{title}</h4>
 
                 {/* Title Row */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(12, 1fr)',
-                    marginBottom: '1em',
-                    gap: '0.5em'
-                }}>
-                    <span style={{ gridColumn: 'span 2' }}></span>
-                    <span style={{
-                        gridColumn: 'span 6',
-                        fontSize: '1rem',
-                        textAlign: 'center',
-                        alignSelf: 'flex-end'
-                    }}>Dish Name</span>
-                    <span style={{
-                        gridColumn: 'span 2',
-                        fontSize: '1rem',
-                        textAlign: 'center',
-                        alignSelf: 'flex-end'
-                    }}>Cal.</span>
-                    <span style={{
-                        gridColumn: 'span 1',
-                        fontSize: '0.8rem',
-                        textAlign: 'right',
-                        alignSelf: 'flex-end'
-                    }}>Light & Healthy</span>
-                    <span style={{
-                        gridColumn: 'span 1',
-                        fontSize: '0.8rem',
-                        textAlign: 'center',
-                        alignSelf: 'flex-end'
-                    }}>Sugar Free</span>
+                <div className="title-row">
+                    <span className="col-span-2"></span>
+                    <span className="col-span-6">Dish Name</span>
+                    <span className="col-span-2-center">Cal.</span>
+                    <span className="col-span-1-right">Light &amp; Healthy</span>
+                    <span className="col-span-1-center">Sugar Free</span>
                 </div>
 
                 {/* Dish Items */}
@@ -96,7 +87,7 @@ const CourseComponent = ({
                     />
                 ))}
 
-                {/* DishInputComponent for adding new dishes */}
+                {/* DishInputComponent for adding new dishes (only if not past) */}
                 {!isPastDate && 
                     <DishInputComponent 
                         onSave={handleSave} 

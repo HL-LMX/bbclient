@@ -1,4 +1,6 @@
-/* src/MenuManagement.css */
+/* File: src/components/MenuManagement/MenuManagement.css
+   Styles for MenuManagement (buttons, grid layout).
+*/
 
 /* Adjust the grid layout to display sections in a 3 by 2 grid by default */
 .menu-sections {
@@ -24,6 +26,7 @@
     }
 }
 
+/* Buttons for “Previous Day” / “Next Day” — same as before */
 .mm-btn {
     padding: 0 20px;
     font-size: 1em;

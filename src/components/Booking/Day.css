@@ -1,0 +1,137 @@
+/* File: src/components/Booking/Day.css */
+/* ───────────────────────────────────────────────────────────────────────────── */
+/* BASE LAYOUT */
+.day-card {
+    padding: 1em;
+    border-radius: 0.5em;
+    margin-bottom: 1em;
+    transition: opacity 0.3s ease, border 0.3s ease;
+}
+
+
+/* ───────────────────────────────────────────────────────────────────────────── */
+/* STATE-BASED STYLES WITH TEXT COLOR VARIABLES */
+/* ───────────────────────────────────────────────────────────────────────────── */
+
+
+
+/* FUTURE - UNSELECTED */
+/* ───────────────────────────────────────────────────────────────────────────── */
+.day-card.future {
+    cursor: pointer;
+    --day-text-color: black;
+    --type-text-color: black;
+    --calories-text-color: black;
+}
+.day-card.future.monday    { background-color: #BBA6D6; }
+.day-card.future.tuesday   { background-color: #D5A5BB; }
+.day-card.future.wednesday { background-color: #FFB3C1; }
+.day-card.future.thursday  { background-color: #FFC2A6; }
+.day-card.future.friday    { background-color: #FFE7A8; }
+
+/* FUTURE - SELECTED */
+/* ───────────────────────────────────────────────────────────────────────────── */
+.day-card.future.selected {
+    --day-text-color: white;
+    --type-text-color: #000000;
+    --calories-text-color: #000000;
+}
+.day-card.future.selected.monday {
+    background-color: #2F0FAF;
+    border-color: #2F0FAF;
+}
+.day-card.future.selected.tuesday {
+    background-color: #940A59;
+    border-color: #940A59;
+}
+.day-card.future.selected.wednesday {
+    background-color: #E41057;
+    border-color: #E41057;
+}
+.day-card.future.selected.thursday {
+    background-color: #EC5E17;
+    border-color: #EC5E17;
+}
+.day-card.future.selected.friday {
+    background-color: #FFBD00;
+    border-color: #FFBD00;
+}
+
+/* PAST - UNSELECTED */
+/* ───────────────────────────────────────────────────────────────────────────── */
+.day-card.past {
+    background-color: lightgrey;
+    color: grey;
+    cursor: default;
+    --day-text-color: grey;
+    --type-text-color: #999;
+    --calories-text-color: #aaa;
+}
+
+/* PAST - SELECTED */
+/* ───────────────────────────────────────────────────────────────────────────── */
+.day-card.past.selected {
+    --day-text-color: rgb(255, 255, 255);
+    --type-text-color: #999;
+    --calories-text-color: #aaa;
+}
+.day-card.past.selected.monday    { background-color: #BBA6D6; }
+.day-card.past.selected.tuesday   { background-color: #D5A5BB; }
+.day-card.past.selected.wednesday { background-color: #FFB3C1; }
+.day-card.past.selected.thursday  { background-color: #FFC2A6; }
+.day-card.past.selected.friday    { background-color: #FFE7A8; }
+
+/* ───────────────────────────────────────────────────────────────────────────── */
+/* TEXT STYLING (USES COLOR VARIABLES) */
+/* ───────────────────────────────────────────────────────────────────────────── */
+.day-name {
+    margin: 0rem 0rem 1rem 0rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: var(--day-text-color);
+}
+
+.dish-type-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-align: left;
+    color: var(--type-text-color);
+}
+
+.calories-label {
+    font-size: 0.8rem;
+    margin: 0;
+    text-align: right;
+    color: var(--calories-text-color);
+}
+
+.day-header {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────── */
+/* LAYOUT: DISH TYPE SECTION */
+
+.dish-type-block {
+    margin-bottom: 1em;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 1em;
+    border-radius: 0.5em;
+    box-shadow: 0.2rem 0.4rem 10px rgba(0, 0, 0, 0.15);
+}
+
+.dish-type-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    /* margin-bottom: 0.5rem; */
+}
+
+.dish-type-grid .spacer {
+    grid-column: span 5;
+    font-weight: bold;
+    margin: 0;
+}

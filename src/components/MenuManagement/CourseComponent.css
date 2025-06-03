@@ -1,0 +1,70 @@
+/* File: src/components/CourseComponent.css
+   Replaces all static inline styles in CourseComponent.js with class-based rules.
+*/
+
+/**
+ * Base container for each course/category section.
+ * Keeps the Bootstrap utility classes (text-light, rounded, p-3) and adds flex layout.
+ */
+.course-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/**
+ * Grid for the header row (Dish Name / Cal. / Light & Healthy / Sugar Free).
+ */
+.title-row {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    margin-bottom: 1em;
+    gap: 0.5em;
+}
+
+/**
+ * Utility for span occupying 2 columns in the 12-column grid.
+ */
+.col-span-2 {
+    grid-column: span 2;
+}
+
+/**
+ * Utility for span occupying 6 columns, centered text, and vertical align to bottom.
+ */
+.col-span-6 {
+    grid-column: span 6;
+    font-size: 1rem;
+    text-align: center;
+    align-self: flex-end;
+}
+
+/**
+ * Utility for span occupying 2 columns, centered text, and vertical align to bottom.
+ */
+.col-span-2-center {
+    grid-column: span 2;
+    font-size: 1rem;
+    text-align: center;
+    align-self: flex-end;
+}
+
+/**
+ * Utility for span occupying 1 column, right-aligned text, and bottom align.
+ */
+.col-span-1-right {
+    grid-column: span 1;
+    font-size: 0.8rem;
+    text-align: right;
+    align-self: flex-end;
+}
+
+/**
+ * Utility for span occupying 1 column, centered text, and bottom align.
+ */
+.col-span-1-center {
+    grid-column: span 1;
+    font-size: 0.8rem;
+    text-align: center;
+    align-self: flex-end;
+}

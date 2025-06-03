@@ -1,0 +1,104 @@
+/* File: src/pages/Home.css
+   Styles for the Home landing page, replacing inline style props.
+*/
+
+/* ------------------------- */
+/* Version Title (“Version 1.2”) */
+/* ------------------------- */
+.home-title {
+    font-size: 2rem;      /* Equivalent to m-5 on <h3> */
+    margin: 3rem 0;       /* Top & bottom spacing */
+    text-align: center;
+}
+
+/* ------------------------- */
+/* “On this site, you can:”  */
+/* ------------------------- */
+.home-card-text {
+    font-size: 1.5em;
+    text-align: left;
+}
+
+/* ------------------------- */
+/* List items under the card */
+/* ------------------------- */
+.home-list-item {
+    font-size: 1.2em;
+    text-align: left;
+    list-style: disc inside;
+    background-color: transparent; /* Override default list-group-item bg */
+    border: none;                  /* Remove default border */
+    padding-left: 0;               /* Remove extra padding */
+}
+
+/* ------------------------- */
+/* SVG path fills           */
+/* ------------------------- */
+.svg-orange {
+    fill: #FF6600;
+}
+
+.svg-lightorange {
+    fill: #FF822D;
+}
+
+/* ------------------------- */
+/* Centers the SVG container */
+/* ------------------------- */
+.home-svg-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ------------------------- */
+/* “Ready to get started?”   */
+/* ------------------------- */
+.home-prompt {
+    margin-top: 3rem;    /* Similar to m-5 */
+    margin-bottom: 3rem;
+}
+
+.home-prompt-text {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+/* ------------------------- */
+/* Additional features block */
+/* ------------------------- */
+.home-features-section {
+    margin-bottom: 3rem;  /* Space below the features block */
+}
+
+.home-features-card {
+    min-height: 10rem;    /* Former inline style */
+}
+
+.home-features-heading {
+    font-size: 1.5em;     /* Former inline style */
+    margin: 1rem;         /* Former m-3 */
+    text-align: left;
+}
+
+/* Each feature column’s outer margin */
+.home-feature-col {
+    margin: 50px 10px;    /* Former inline style */
+}
+
+/* Inner card margin */
+.home-feature-inner-card {
+    margin: 10px;         /* Former inline style */
+}
+
+/* The text below each SVG */
+.home-feature-text {
+    font-size: 1rem;
+    font-weight: normal;
+    margin-top: 0.5rem;
+}
+
+/* If you want to add a bit of spacing under each feature icon */
+.home-feature-icon {
+    margin-bottom: 0.5rem;
+}
