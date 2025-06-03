@@ -268,7 +268,7 @@ export const Booking = () => {
                         {hasActiveDays && (
                             <>
                                 <button onClick={handleSave} className="save-button">
-                                    Save Attendance
+                                    Save Attendance*
                                 </button>
                                 {popup}
                             </>
@@ -279,10 +279,13 @@ export const Booking = () => {
                 <div className="col-empty" >
                     <div className="reminderContainer">
                         <p className="reminderTextLarge">
-                            Remember to rate the dishes you ate with the new <b>rating option</b>*
+                            Remember to rate the dishes you ate with the new <b>rating option</b>**
                         </p>
                         <p className="reminderTextSmall">
-                            *Rating is only available on days with saved attendance.
+                            *Saving attendance is purely for statistical purposes and will <b>never result in any charge</b>.
+                        </p>
+                        <p className="reminderTextSmall">
+                            **Rating is only available on days with saved attendance.
                         </p>
                     </div> 
                 </div>
