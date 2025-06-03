@@ -43,14 +43,15 @@ main {
 /* Dark background behind title and buttons */
 header {
     background-color: #FFA81C;
-    padding: 1rem 0;      /* Vertical padding above & below title/buttons */
+    padding: 1.5rem 2rem;      /* Vertical padding above & below title/buttons */
     color: white;
 }
 
 /* Header title (Booking Bite Mx) */
 header h1 {
+    /* font-family: 'Noto Serif Dives Akuru'; */
     color: white;
-    font-size: 2rem;
+    font-size: 4rem;
     font-weight: bold;
 }
 
@@ -60,13 +61,14 @@ header nav ul {
     display: flex;           /* Horizontal layout */
     justify-content: flex-start; /* Align items to left */
     gap: 1rem;               /* Space between buttons */
-    padding: 0 1rem;         /* Add some horizontal padding */
-    margin-top: 0.5rem;      /* Space below title */
+    padding: 0 1rem;         /* Horizontal padding */
+    margin-top: 2rem;      /* Space below title */
 }
 
 /* Remove default <li> styles */
 header nav ul li {
     list-style: none;
+    padding: 0 .4rem;
 }
 
 /* NavLink styled as a button */
@@ -75,7 +77,7 @@ header nav ul li {
     color: black;                /* White text */
     border: none;
     border-radius: 4px;
-    padding: 0.5rem 1rem;
+    padding: .8rem 1.5rem;
     text-decoration: none;       /* Remove underline */
     font-size: 1.2rem;
     /* font-weight: bold; */

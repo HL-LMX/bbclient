@@ -38,22 +38,12 @@ const App = () => {
               </li>
               <li>
                 <NavLink
-                  to="/bookingbite/menu-management"
-                  className={({ isActive }) =>
-                    isActive ? 'nav-button active-nav' : 'nav-button'
-                  }
-                >
-                  Menu Management
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
                   to="/bookingbite/booking"
                   className={({ isActive }) =>
                     isActive ? 'nav-button active-nav' : 'nav-button'
                   }
                 >
-                  Booking
+                  Menu Calendar
                 </NavLink>
               </li>
             </ul>

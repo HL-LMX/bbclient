@@ -8,8 +8,8 @@
 .arrow-button {
     padding: 1rem 1.5rem;
     font-size: 1em;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color: #d8d8d8;
+    border: 0;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.4s ease, box-shadow 0.4s ease;
@@ -17,14 +17,15 @@
 }
 
 .arrow-button:hover {
-    background-color: #ddd;
+    background-color: #f4f4f4;
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Save-button styling (unchanged) */
 /* ────────────────────────────────────────────────────────────────────────── */
 .save-button {
-    font-weight: bold;
+    /* font-weight: bold; */
+    font-size: 1.2rem;
     padding: 1rem 2.5rem;
     border: none;
     background-color: #28a745;
