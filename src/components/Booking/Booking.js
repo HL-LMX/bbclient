@@ -2,8 +2,10 @@
 // Main booking/attendance screen. Uses only Booking.css for styling.
 
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK } from '../../utils/constants';
 import Day from './Day';
+import { Suggestions } from '../../pages/Suggestions';
 
 import './Booking.css';  // only global/component CSS—no CSS modules
 
@@ -237,8 +239,11 @@ export const Booking = () => {
         <div>
             {/* Top Grid: 5 Columns (empty, merged center, empty) */}
             <div className="topGrid">
-                <div className="col-empty">
-
+                <div className="first-col">
+                    {/* Suggestions button */}
+                    <NavLink to="/bookingbite/suggestions" className="nav-button suggestions-link">
+                        Suggestions
+                    </NavLink>
                 </div>
 
                 <div className="col-center">

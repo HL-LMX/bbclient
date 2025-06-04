@@ -15,9 +15,12 @@
     margin-bottom: 2rem;
 }
 
-.col-empty {
-    /* intentionally blank */
+.first-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 .col-center {
     grid-column: 2 / 5;  /* Span columns 2, 3, and 4 */

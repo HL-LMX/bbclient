@@ -4,9 +4,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import './App.css';
 import { Home } from './pages/Home';
-import { Suggestions } from './pages/Suggestions';
 import { MenuManagement } from './components/MenuManagement/MenuManagement';
 import { Booking } from './components/Booking/Booking';
+import { Suggestions } from './pages/Suggestions';
 import NotFound from './pages/NotFound';
 
 /**
@@ -39,22 +39,12 @@ const App = () => {
               </li>
               <li>
                 <NavLink
-                  to="/bookingbite/menu-management"
+                  to="/bookingbite/booking"
                   className={({ isActive }) =>
                     isActive ? 'nav-button active-nav' : 'nav-button'
                   }
                 >
                   Menu Calendar
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/suggestions"
-                  className={({ isActive }) =>
-                    isActive ? 'nav-button active-nav' : 'nav-button'
-                  }
-                >
-                  Suggestions
                 </NavLink>
               </li>
             </ul>
@@ -67,9 +57,9 @@ const App = () => {
         <main>
           <Routes>
             <Route path="/home" element={<Home />} />
-            <Route path="/suggestions" element={<Suggestions />} />
             <Route path="/bookingbite/menu-management" element={<MenuManagement />} />
             <Route path="/bookingbite/booking" element={<Booking />} />
+            <Route path="/bookingbite/suggestions" element={<Suggestions />} />
             <Route path="/" element={<Navigate replace to="/home" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
