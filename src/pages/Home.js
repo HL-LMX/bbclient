@@ -13,7 +13,7 @@ export const Home = () => {
         <div className="container">
             <div className="row justify-content-center">
                 {/* Version title */}
-                <h3 className="card-title home-title">Version 1.2</h3>
+                <h3 className="card-title home-title">Version 1.3</h3>
 
                 <div className="col-md-10 card bg-light">
                     <div className="row justify-content-center">
@@ -25,13 +25,19 @@ export const Home = () => {
                                     </p>
                                     <ul className="list-group list-group-flush">
                                         <li className="home-list-item">
-                                            1. Check the menu
+                                            1. Order Breakfast
                                         </li>
                                         <li className="home-list-item">
-                                            2. Book your visit
+                                            2. Check the lunch menu
                                         </li>
                                         <li className="home-list-item">
-                                            3. Rate the food!
+                                            3. Book your visit to lunch
+                                        </li>
+                                        <li className="home-list-item">
+                                            4. Rate the food
+                                        </li>
+                                        <li className="home-list-item">
+                                            5.Provide Feedback
                                         </li>
                                     </ul>
                                 </div>
@@ -90,58 +96,12 @@ export const Home = () => {
             <div className="row justify-content-center home-prompt">
                 <div className="col-md-10">
                     <h4 className="home-prompt-text">
-                        Ready to get started? Click on the “Menu Calendar” button in the menu at the top left corner.
+                        Ready to get started? Click on the “Lunch” button in the top left corner.
                     </h4>
                 </div>
             </div>
 
-            {/* Additional features section */}
-            <div className="row justify-content-center home-features-section">
-                <div className="col-md-10">
-                    <div className="card bg-light mb-3 home-features-card">
-                        <div className="card-body d-flex flex-column justify-content-between">
-                            <p className="card-text home-features-heading">
-                                Stay tuned! Additional features may include:
-                            </p>
-                            <div className="row justify-content-between align-items-stretch">
-
-                                {/* Remote breakfast ordering */}
-                                <div className="col home-feature-col">
-                                    <div className="card h-100 home-feature-inner-card">
-                                        <div className="card-body text-center">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="56"
-                                                height="56"
-                                                fill="#97076C"
-                                                className="bi bi-cart2 m-3 home-feature-icon"
-                                                viewBox="0 0 16 16"
-                                            >
-                                                <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0" />
-                                            </svg>
-                                            <p className="card-text home-feature-text">
-                                                Remote Breakfast Ordering
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Chef suggestions */}
-                                <div className="col home-feature-col">
-                                    <div className="card h-100 home-feature-inner-card">
-                                        <div className="card-body text-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#B51D0C" class="bi bi-pencil-square m-3" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path></svg>
-                                            <p className="card-text home-feature-text">
-                                                Suggestions for the Chef 
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     );
 };

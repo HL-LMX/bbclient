@@ -6,7 +6,8 @@ import './App.css';
 import { Home } from './pages/Home';
 import { MenuManagement } from './components/MenuManagement/MenuManagement';
 import { Booking } from './components/Booking/Booking';
-import { Suggestions } from './pages/Suggestions';
+import { Feedback } from './pages/Feedback';
+import { Breakfast } from './pages/Breakfast';
 import NotFound from './pages/NotFound';
 
 /**
@@ -37,6 +38,18 @@ const App = () => {
                   Home
                 </NavLink>
               </li>
+
+              <li>
+                <NavLink
+                  to="/bookingbite/breakfast"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-button active-nav' : 'nav-button'
+                  }
+                >
+                  Breakfast
+                </NavLink>
+              </li>
+
               <li>
                 <NavLink
                   to="/bookingbite/booking"
@@ -44,7 +57,17 @@ const App = () => {
                     isActive ? 'nav-button active-nav' : 'nav-button'
                   }
                 >
-                  Menu Calendar
+                  Lunch
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/bookingbite/feedback"
+                  className={({ isActive }) =>
+                    isActive ? 'nav-button active-nav' : 'nav-button'
+                  }
+                >
+                  Feedback
                 </NavLink>
               </li>
             </ul>
@@ -58,8 +81,9 @@ const App = () => {
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/bookingbite/menu-management" element={<MenuManagement />} />
+            <Route path="/bookingbite/breakfast" element={<Breakfast />} />
             <Route path="/bookingbite/booking" element={<Booking />} />
-            <Route path="/bookingbite/suggestions" element={<Suggestions />} />
+            <Route path="/bookingbite/feedback" element={<Feedback />} />
             <Route path="/" element={<Navigate replace to="/home" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -69,7 +93,7 @@ const App = () => {
         {/* Footer: original yellow background, dimensions, and typography     */}
         {/* ─────────────────────────────────────────────────────────────────── */}
         <footer className="app-footer">
-          Hapag-Lloyd México 2024
+          Hapag-Lloyd México - IT LMX 2025
         </footer>
       </div>
     </BrowserRouter>

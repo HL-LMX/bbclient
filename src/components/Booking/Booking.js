@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK } from '../../utils/constants';
 import Day from './Day';
-import { Suggestions } from '../../pages/Suggestions';
+import { Feedback } from '../../pages/Feedback';
 
 import './Booking.css';  // only global/component CSS—no CSS modules
 
@@ -55,7 +55,7 @@ const calculateAvailableDishesByDayAndType = (currentDate, availableDishes, DAYS
 };
 
 /**
- * Booking: Main component that renders the weekly menu calendar and allows saving attendance.
+ * Booking: Main component that renders the weekly Lunch and allows saving attendance.
  *
  * - Fetches available dishes for each week.
  * - Tracks selected days (unsavedChanges) vs. persisted days (savedDays).
@@ -239,15 +239,8 @@ export const Booking = () => {
         <div>
             {/* Top Grid: 5 Columns (empty, merged center, empty) */}
             <div className="topGrid">
-                <div className="first-col">
-                    {/* Suggestions button */}
-                    <NavLink to="/bookingbite/suggestions" className="nav-button suggestions-link">
-                        Suggestions
-                    </NavLink>
-                </div>
-
                 <div className="col-center">
-                    <h3 className="title">Menu Calendar</h3>
+                    <h3 className="title">Lunch</h3>
 
                     <div className="navigation">
                         <button
@@ -283,9 +276,6 @@ export const Booking = () => {
 
                 <div className="col-empty" >
                     <div className="reminderContainer">
-                        <p className="reminderTextLarge">
-                            Remember to rate the dishes you ate with the new <b>rating option</b>**
-                        </p>
                         <p className="reminderTextSmall">
                             *Saving attendance is purely for statistical purposes and will <b>never result in any charge</b>.
                         </p>
