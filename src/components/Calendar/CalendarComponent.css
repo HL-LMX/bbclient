@@ -1,0 +1,51 @@
+/* File: src/components/CalendarComponent.css
+   Styles for CalendarComponent.js (migrated all inline “cellSize” rules here).
+*/
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+/* Weekday labels (Su, Mo, Tu, We, Th, Fr, Sa) */
+.day {
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+}
+
+/* Each date‐cell */
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    cursor: pointer;
+
+    /* Moved from inline: fixed size for each calendar cell */
+    height: 2em;
+    width: 2em;
+}
+
+/* “Blank” slots before the month starts */
+.cell.blank-cell {
+    background-color: #f5f5f5;
+}
+
+/* Highlight “today” */
+.cell.today {
+    background-color: #e0f7fa; /* Light blue */
+}
+
+/* Highlight the currently selected date */
+.cell.selected {
+    background-color: #81c784; /* Light green */
+}

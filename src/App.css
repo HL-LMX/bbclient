@@ -1,38 +1,116 @@
+/* src/App.css
+   Global styles for the application, including left-aligned nav buttons and the original yellow footer.
+*/
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Reset common defaults so layout is consistent                              */
+/* ────────────────────────────────────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Utility Classes (text centering and margin)                                */
+/* ────────────────────────────────────────────────────────────────────────── */
+.text-center {
+    text-align: center;
+}
+
+.m-3 {
+    margin: 1rem;
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* App container spans full viewport and lays out header, main, and footer    */
+/* ────────────────────────────────────────────────────────────────────────── */
 .App {
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Let <main> grow to fill space between header and footer */
+main {
+    flex-grow: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Header / Navigation Bar                                                   */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Dark background behind title and buttons */
+header {
+    background-color: #FFA81C;
+    padding: 1.5rem 2rem;      /* Vertical padding above & below title/buttons */
+    color: white;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Header title (Booking Bite Mx) */
+header h1 {
+    /* font-family: 'Noto Serif Dives Akuru'; */
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
 }
 
-.App-link {
-  color: #61dafb;
+/* Navigation <ul>: left-aligned */
+header nav ul {
+    list-style: none;        /* Remove bullets */
+    display: flex;           /* Horizontal layout */
+    justify-content: flex-start; /* Align items to left */
+    gap: 1rem;               /* Space between buttons */
+    padding: 0 1rem;         /* Horizontal padding */
+    margin-top: 2rem;      /* Space below title */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Remove default <li> styles */
+header nav ul li {
+    list-style: none;
+    padding: 0 .4rem;
+}
+
+/* NavLink styled as a button */
+.nav-button {
+    background-color: #e1e1e1;   /* background */
+    color: black;                /* White text */
+    border: none;
+    border-radius: 4px;
+    padding: .8rem 1.5rem;
+    text-decoration: none;       /* Remove underline */
+    font-size: 1.2rem;
+    /* font-weight: bold; */
+    transition: background-color 0.3s ease;
+}
+
+/* Hover state for nav-button */
+.nav-button:hover {
+    background-color: #c7c6c6;   /* Slightly darker color on hover */
+}
+
+/* Active route: darker border or underline to show selection */
+.active-nav {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background-color: #ffffff
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Footer: original yellow background, dimensions, and typography            */
+/* ────────────────────────────────────────────────────────────────────────── */
+.app-footer {
+    background-color: #FFA81C;   /* Original yellow */
+    color: white;                /* White text on yellow */
+    text-align: center;          /* Centered content */
+    padding: 30px;               /* 30px top & bottom padding */
+    margin: 50px 0 0;            /* 50px top margin, no bottom margin */
+    font-size: 1rem;             /* Base font size */
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Optional Utility Tweaks                                                    */
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Ensure <main> content has slight horizontal padding */
+main {
+    padding: 0 1rem;
 }

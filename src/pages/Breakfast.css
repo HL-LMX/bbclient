@@ -1,0 +1,21 @@
+/* File: src/pages/Feedback.css */
+
+.breakfast-title {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.form-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.instructions {
+  text-align: left;        /* Align text to the left */
+  margin: 0 auto;          /* Center the container */
+  padding: 1rem;           /* Optional: add some spacing */
+  background-color: #f9f9f9;  /* Optional: light background for readability */
+  border-radius: 8px;      /* Optional: rounded corners */
+}
+
