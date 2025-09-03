@@ -237,6 +237,14 @@ export const Booking = () => {
 
     return (
         <div>
+
+             {/* Maintenance Banner */}
+            <div className="maintenance-banner">
+                Under Maintenance
+            </div>
+
+
+
             {/* Top Grid: 5 Columns (empty, merged center, empty) */}
             <div className="topGrid">
                 <div className="col-center">
