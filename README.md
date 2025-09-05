@@ -254,6 +254,3 @@ Get-Service | ? { $_.Name -match 'booking|waitress|django|python' -or $_.Display
   ft -Auto Name,DisplayName,Status
 ```
 
----
-
-**That’s it!** This setup lets IIS serve the SPA while cleanly proxying API traffic to the Django backend on Waitress, using environment‑based configuration for the frontend and a Windows service for backend reliability.
