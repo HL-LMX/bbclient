@@ -25,3 +25,7 @@ export const API_ENDPOINTS = {
   CHEF_DELETE_DISH: 'chef-management/delete-dish-from-date/',
   SEARCH_DISHES: 'chef-management/search-dishes/?',
 };
+
+
+// 5) Default number of days to offset for menu management
+export const DEFAULT_MENU_MANAGEMENT_LOAD_DATE = 0;
