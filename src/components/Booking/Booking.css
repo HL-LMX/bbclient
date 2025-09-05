@@ -145,17 +145,3 @@
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 20px;
 }
-
-
-
-.maintenance-banner {
-    text-align: center;
-    font-size: 2.5rem;   /* Large letters */
-    font-weight: bold;
-    color: #b00020;      /* Strong red to stand out */
-    background-color: #fff3f3;
-    padding: 1rem;
-    border: 2px solid #b00020;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-}
