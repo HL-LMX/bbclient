@@ -6,8 +6,8 @@
 export const API_URL = process.env.REACT_APP_API_URL;
 
 
-// 2) Locking logic for the Chef (e.g. days ahead)
-export const CHEF_LOCKED_DAYS_AHEAD = -10;
+// 2) Number of aditional days to lock the Menu Management (default value is "today is locked, plus/minus the days declared below")
+export const CHEF_LOCKED_DAYS_AHEAD = 0;
 
 
 // 3) Days of week
