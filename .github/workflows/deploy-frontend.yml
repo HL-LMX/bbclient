@@ -51,6 +51,12 @@ jobs:
           node -v
           npm -v
 
+      - name: Setup Node.js (v18) with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
       - name: Write project .npmrc (proxy + CA)
         run: |
           @"
@@ -58,27 +64,26 @@ jobs:
           https-proxy=$env:HTTPS_PROXY
           strict-ssl=true
           cafile=C:\certs\hlag-zscaler-root.pem
+          registry=https://registry.npmjs.org/
           "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
           type "$env:GITHUB_WORKSPACE\.npmrc"
 
-      - name: Install dependencies (includes dev)
+      - name: Clean install dependencies (handles corrupted node_modules)
         run: |
-          if (Test-Path package-lock.json) {
-            npm ci
-          } else {
-            npm install --include=dev
-          }
-          node -v
-          npm -v
-          npm ls react-scripts --depth=0
+          if (Test-Path node_modules) { Remove-Item -Recurse -Force node_modules }
+          if (Test-Path package-lock.json) { Remove-Item -Force package-lock.json }
+          npm cache verify
+          npm install --include=dev --no-audit --no-fund --legacy-peer-deps
 
       - name: Build React app
         run: |
+          $env:CI = "true"
           $env:REACT_APP_API_URL = "/api/"
           npm run build
           if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) {
             throw "Build failed: build\index.html not found"
           }
+
 
 
 
