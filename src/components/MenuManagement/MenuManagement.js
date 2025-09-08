@@ -3,7 +3,7 @@
 // We replicate the exact “look” of the buttons and date label from the original,
 // and ensure that fetchDishes runs whenever selectedDate changes (so the UI updates).
 
-import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK, CHEF_LOCKED_DAYS_AHEAD} from '../../utils/constants';
+import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK, CHEF_LOCKED_DAYS_AHEAD, DEFAULT_MENU_MANAGEMENT_LOAD_DATE } from '../../utils/constants';
 import React, { useState, useEffect } from 'react';
 import MuiCalendar from './MuiCalendar';
 import CourseComponent from './CourseComponent';
@@ -22,7 +22,7 @@ export const MenuManagement = () => {
   // 1) Compute next Monday as initial “currentDate”
   const [currentDate] = useState(() => {
     const d = new Date();
-    d.setDate(d.getDate() + 7);
+    d.setDate(d.getDate() + DEFAULT_MENU_MANAGEMENT_LOAD_DATE);
     while (d.getDay() !== 1) {
       d.setDate(d.getDate() + 1);
     }
