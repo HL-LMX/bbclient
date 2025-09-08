@@ -51,25 +51,35 @@ jobs:
           node -v
           npm -v
 
-      - name: Install dependencies (ci or install)
+      - name: Write project .npmrc (proxy + CA)
+        run: |
+          @"
+          proxy=$env:HTTPS_PROXY
+          https-proxy=$env:HTTPS_PROXY
+          strict-ssl=true
+          cafile=C:\certs\hlag-zscaler-root.pem
+          "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
+          type "$env:GITHUB_WORKSPACE\.npmrc"
+
+      - name: Install dependencies (includes dev)
         run: |
           if (Test-Path package-lock.json) {
             npm ci
           } else {
-            npm install
+            npm install --include=dev
           }
+          node -v
+          npm -v
+          npm ls react-scripts --depth=0
 
-      - name: Build React app (fallback install for react-scripts)
+      - name: Build React app
         run: |
           $env:REACT_APP_API_URL = "/api/"
-          if (!(Test-Path ".\node_modules\.bin\react-scripts.cmd")) {
-            Write-Warning "react-scripts not found; installing now..."
-            npm install --no-audit --no-fund --save-dev react-scripts@5
-          }
           npm run build
           if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) {
             throw "Build failed: build\index.html not found"
           }
+
 
 
 
