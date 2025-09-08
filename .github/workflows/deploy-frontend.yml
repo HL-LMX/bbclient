@@ -1,0 +1,66 @@
+name: Deploy BookingBite Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy-frontend.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bookingbite-frontend-prod
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, windows, iis, bookingbite, frontend]
+    env:
+      HTTPS_PROXY: http://proxy.hlag.com:11009
+      HTTP_PROXY: http://proxy.hlag.com:11009
+      NO_PROXY: 127.0.0.1,localhost,*.hlag.com
+      NODE_EXTRA_CA_CERTS: C:\certs\hlag-zscaler-root.pem
+      REQUESTS_CA_BUNDLE: C:\certs\hlag-zscaler-root.pem
+      SSL_CERT_FILE: C:\certs\hlag-zscaler-root.pem
+    defaults:
+      run:
+        shell: powershell
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (v20) with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Configure npm proxy/CA (idempotent)
+        run: |
+          npm config set proxy $env:HTTPS_PROXY
+          npm config set https-proxy $env:HTTPS_PROXY
+          npm config set strict-ssl true
+          npm config set cafile "C:\certs\hlag-zscaler-root.pem"
+          node -v
+          npm -v
+
+      - name: Install dependencies
+        run: |
+          if (Test-Path package-lock.json) { npm ci } else { npm install }
+
+      - name: Build React app (REACT_APP_API_URL=/api/)
+        run: |
+          $env:REACT_APP_API_URL = "/api/"
+          npm run build
+          if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) { throw "Build failed: build\index.html not found" }
+
+      - name: Deploy to IIS site root
+        run: |
+          C:\deployments\scripts\deploy-frontend.ps1 -BuildDir "$env:GITHUB_WORKSPACE\build"
