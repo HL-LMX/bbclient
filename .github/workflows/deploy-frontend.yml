@@ -1,4 +1,4 @@
-name: Deploy BookingBite Frontend
+name: Deploy BookingBite Frontend (Server-Side Build)
 
 on:
   push:
@@ -21,7 +21,48 @@ concurrency:
 jobs:
   deploy:
     runs-on: [self-hosted, windows, iis, bookingbite, frontend]
-    steps:
-      - name: Run server-side build+deploy
+    timeout-minutes: 45
+
+    env:
+      HTTPS_PROXY: http://proxy.hlag.com:11009
+      HTTP_PROXY: http://proxy.hlag.com:11009
+      NO_PROXY: 127.0.0.1,localhost,*.hlag.com
+      NODE_EXTRA_CA_CERTS: C:\certs\corp-bundle.pem
+      REQUESTS_CA_BUNDLE: C:\certs\corp-bundle.pem
+      SSL_CERT_FILE: C:\certs\corp-bundle.pem
+      NPM_CONFIG_STRICT_SSL: "false"
+      NPM_CONFIG_PROXY: http://proxy.hlag.com:11009
+      NPM_CONFIG_HTTPS_PROXY: http://proxy.hlag.com:11009
+      NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+
+    defaults:
+      run:
         shell: powershell
-        run: C:\deployments\sync_bbclient.ps1
+
+    steps:
+      - name: Start log
+        run: |
+          Write-Output "=== BookingBite Frontend deploy started: $(Get-Date) ==="
+
+      - name: Run server-side sync/build/deploy
+        run: |
+          $script = 'C:\deployments\sync_bbclient.ps1'
+          if (!(Test-Path $script)) {
+            throw "Deployment script not found at $script"
+          }
+          & $script
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Sanity check deployed files
+        run: |
+          $deployDir = 'C:\inetpub\wwwroot\bookingbite'
+          $indexFile = Join-Path $deployDir 'index.html'
+          if (!(Test-Path $deployDir)) { throw "Deploy directory not found: $deployDir" }
+          if (!(Test-Path $indexFile)) { throw "Build appears missing: $indexFile not found" }
+          $staticDir = Join-Path $deployDir 'static'
+          if (!(Test-Path $staticDir)) { throw "Static assets folder missing: $staticDir" }
+          Write-Output "Deployed files look good."
+
+      - name: End log
+        run: |
+          Write-Output "=== BookingBite Frontend deploy finished: $(Get-Date) ==="
