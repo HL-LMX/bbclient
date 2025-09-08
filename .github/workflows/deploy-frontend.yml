@@ -1,4 +1,4 @@
-name: Deploy BookingBite Frontend (Server-Side Build)
+name: Deploy BookingBite Frontend (Self-Contained)
 
 on:
   push:
@@ -22,8 +22,11 @@ jobs:
   deploy:
     runs-on: [self-hosted, windows, iis, bookingbite, frontend]
     timeout-minutes: 45
-
+    defaults:
+      run:
+        shell: pwsh
     env:
+      # --- corporate proxy / CA bundle (adjust if needed) ---
       HTTPS_PROXY: http://proxy.hlag.com:11009
       HTTP_PROXY: http://proxy.hlag.com:11009
       NO_PROXY: 127.0.0.1,localhost,*.hlag.com
@@ -35,34 +38,72 @@ jobs:
       NPM_CONFIG_HTTPS_PROXY: http://proxy.hlag.com:11009
       NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
 
-    defaults:
-      run:
-        shell: powershell
-
     steps:
-      - name: Start log
-        run: |
-          Write-Output "=== BookingBite Frontend deploy started: $(Get-Date) ==="
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Run server-side sync/build/deploy
+      - name: Setup Node.js 18 (with npm cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Configure npm proxy/registry (.npmrc)
         run: |
-          $script = 'C:\deployments\sync_bbclient.ps1'
-          if (!(Test-Path $script)) {
-            throw "Deployment script not found at $script"
+          @"
+          proxy=$env:HTTPS_PROXY
+          https-proxy=$env:HTTPS_PROXY
+          strict-ssl=false
+          registry=https://registry.npmjs.org/
+          "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
+
+      - name: Bring in production env (or set safe fallback)
+        run: |
+          # If you store your CRA env file on the server, copy it in:
+          $envSource = 'C:\deployments\env\bookingbite\.env.production.local'
+          if (Test-Path $envSource) {
+            Copy-Item $envSource -Destination "$env:GITHUB_WORKSPACE\.env.production.local" -Force
+            Write-Output "Loaded .env.production.local from $envSource"
+          } else {
+            Write-Warning "No .env.production.local at $envSource; falling back to REACT_APP_API_URL=/api/"
+            $env:REACT_APP_API_URL = "/api/"
           }
-          & $script
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Install dependencies
+        run: |
+          if (Test-Path package-lock.json) {
+            npm ci --no-audit --no-fund
+          } else {
+            npm install --include=dev --no-audit --no-fund --legacy-peer-deps
+          }
+
+      - name: Ensure Babel plugin present (silence CRA/babel warning)
+        run: |
+          if (-not (Test-Path "node_modules\@babel\plugin-proposal-private-property-in-object")) {
+            npm install -D @babel/plugin-proposal-private-property-in-object --no-audit --no-fund --legacy-peer-deps
+          }
+
+      - name: Build (don’t treat warnings as errors)
+        run: |
+          if (Test-Path Env:CI) { Remove-Item Env:CI -ErrorAction SilentlyContinue }
+          $env:DISABLE_ESLINT_PLUGIN = "true"
+          npm run build
+          if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) {
+            throw "Build failed: build\index.html not found"
+          }
+
+      - name: Deploy to IIS site root
+        run: |
+          $deploy = 'C:\inetpub\wwwroot\bookingbite'
+          if (!(Test-Path $deploy)) { New-Item -ItemType Directory -Path $deploy | Out-Null }
+          # keep web.config; wipe everything else
+          Get-ChildItem $deploy | Where-Object { $_.Name -ne 'web.config' } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          # copy new build
+          Copy-Item -Path (Join-Path $env:GITHUB_WORKSPACE 'build\*') -Destination $deploy -Recurse -Force
 
       - name: Sanity check deployed files
         run: |
-          $deployDir = 'C:\inetpub\wwwroot\bookingbite'
-          $indexFile = Join-Path $deployDir 'index.html'
-          if (!(Test-Path $deployDir)) { throw "Deploy directory not found: $deployDir" }
-          if (!(Test-Path $indexFile)) { throw "Build appears missing: $indexFile not found" }
-          $staticDir = Join-Path $deployDir 'static'
-          if (!(Test-Path $staticDir)) { throw "Static assets folder missing: $staticDir" }
-          Write-Output "Deployed files look good."
-
-      - name: End log
-        run: |
-          Write-Output "=== BookingBite Frontend deploy finished: $(Get-Date) ==="
+          $deploy = 'C:\inetpub\wwwroot\bookingbite'
+          if (!(Test-Path (Join-Path $deploy 'index.html'))) { throw "Deploy failed: index.html missing in $deploy" }
+          if (!(Test-Path (Join-Path $deploy 'static'))) { throw "Deploy failed: static folder missing in $deploy" }
+          Write-Output "Deploy OK -> $deploy"
