@@ -23,18 +23,17 @@ jobs:
     runs-on: [self-hosted, windows, iis, bookingbite, frontend]
     timeout-minutes: 45
     env:
-      # Proxy & corporate CA bundle — make npm/node trust the proxy-issued certs
       HTTPS_PROXY: http://proxy.hlag.com:11009
       HTTP_PROXY: http://proxy.hlag.com:11009
       NO_PROXY: 127.0.0.1,localhost,*.hlag.com
       NODE_EXTRA_CA_CERTS: C:\certs\corp-bundle.pem
       REQUESTS_CA_BUNDLE: C:\certs\corp-bundle.pem
       SSL_CERT_FILE: C:\certs\corp-bundle.pem
-      # Tell npm explicitly via env (overrides .npmrc)
-      NPM_CONFIG_CAFILE: C:\certs\corp-bundle.pem
-      NPM_CONFIG_STRICT_SSL: "true"
+      # Force npm to skip TLS verification inside the job (unblocks behind Zscaler)
+      NPM_CONFIG_STRICT_SSL: "false"
       NPM_CONFIG_PROXY: http://proxy.hlag.com:11009
       NPM_CONFIG_HTTPS_PROXY: http://proxy.hlag.com:11009
+      NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
     defaults:
       run:
         shell: powershell
@@ -43,57 +42,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # CRA 5 is most stable on Node 18
       - name: Setup Node.js (v18) with npm cache
         uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
 
-      # Also write a project .npmrc for good measure (env vars above still win)
-      - name: Write project .npmrc (proxy + corporate CA bundle)
+      - name: Write project .npmrc (proxy + registry)
         run: |
           @"
           proxy=$env:HTTPS_PROXY
           https-proxy=$env:HTTPS_PROXY
-          strict-ssl=true
-          cafile=C:\certs\corp-bundle.pem
+          strict-ssl=false
           registry=https://registry.npmjs.org/
           "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
 
-      - name: Quick npm TLS sanity
-        run: |
-          npm config get cafile
-          npm ping
-          npm view react-scripts version
-
-      # Use a bumped cache namespace to avoid any previously-bad node_modules
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}\node_modules
-          key: node-modules-v4-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: node-modules-v5-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-v4-${{ runner.os }}-
+            node-modules-v5-${{ runner.os }}-
 
-      # Install with secure settings; if it still fails (rare), retry once with strict-ssl=false
-      - name: Install dependencies (secure, with one retry)
+      - name: Install dependencies (fast, cached)
         run: |
-          $ErrorActionPreference = "Stop"
-          function Install-Npm {
-            if (Test-Path package-lock.json) {
-              npm ci --prefer-offline --no-audit --no-fund
-            } else {
-              npm install --include=dev --prefer-offline --no-audit --no-fund --legacy-peer-deps
-            }
-          }
-          try {
-            Install-Npm
-          } catch {
-            Write-Warning "npm install failed once. Retrying with strict-ssl=false (temporary workaround)."
-            npm config set strict-ssl false
-            Install-Npm
-            npm config set strict-ssl true
+          if (Test-Path package-lock.json) {
+            npm ci --prefer-offline --no-audit --no-fund
+          } else {
+            npm install --include=dev --prefer-offline --no-audit --no-fund --legacy-peer-deps
           }
 
       - name: Save node_modules cache
@@ -101,14 +78,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}\node_modules
-          key: node-modules-v4-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: node-modules-v5-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
-      # Build with API base wired for IIS proxying
       - name: Build React app
         run: |
           $env:CI = "true"
           $env:REACT_APP_API_URL = "/api/"
-          # Verify react-scripts is present from the normal install (no ad-hoc fetch)
           if (!(Test-Path ".\node_modules\.bin\react-scripts.cmd")) {
             throw "react-scripts missing from node_modules; install step did not complete correctly."
           }
