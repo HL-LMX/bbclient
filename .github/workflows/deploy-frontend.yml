@@ -51,15 +51,28 @@ jobs:
           node -v
           npm -v
 
-      - name: Install dependencies
+      - name: Install dependencies (ci or install)
         run: |
-          if (Test-Path package-lock.json) { npm ci } else { npm install }
+          if (Test-Path package-lock.json) {
+            npm ci
+          } else {
+            npm install
+          }
+          npm ls react-scripts --depth=0 || echo "react-scripts not listed (will install if needed)"
 
-      - name: Build React app (REACT_APP_API_URL=/api/)
+      - name: Build React app (fallback install for react-scripts)
         run: |
           $env:REACT_APP_API_URL = "/api/"
+          # If react-scripts is missing, add it ad-hoc (doesn't commit to repo)
+          if (!(Test-Path ".\node_modules\.bin\react-scripts.cmd")) {
+            Write-Warning "react-scripts not found; installing now..."
+            npm install --no-audit --no-fund --save-dev react-scripts@5
+          }
           npm run build
-          if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) { throw "Build failed: build\index.html not found" }
+          if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) {
+            throw "Build failed: build\index.html not found"
+          }
+
 
       - name: Deploy to IIS site root
         run: |
