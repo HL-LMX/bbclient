@@ -21,6 +21,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: [self-hosted, windows, iis, bookingbite, frontend]
+    timeout-minutes: 30
     env:
       HTTPS_PROXY: http://proxy.hlag.com:11009
       HTTP_PROXY: http://proxy.hlag.com:11009
@@ -36,27 +37,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js (v20) with npm cache
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Configure npm proxy/CA (idempotent)
-        run: |
-          npm config set proxy $env:HTTPS_PROXY
-          npm config set https-proxy $env:HTTPS_PROXY
-          npm config set strict-ssl true
-          npm config set cafile "C:\certs\hlag-zscaler-root.pem"
-          node -v
-          npm -v
-
+      # Use Node 18 (CRA 5 is happiest here) and cache npm's package cache
       - name: Setup Node.js (v18) with npm cache
         uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
 
+      # Make npm trust the corporate proxy and CA
       - name: Write project .npmrc (proxy + CA)
         run: |
           @"
@@ -66,15 +54,33 @@ jobs:
           cafile=C:\certs\hlag-zscaler-root.pem
           registry=https://registry.npmjs.org/
           "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
-          type "$env:GITHUB_WORKSPACE\.npmrc"
 
-      - name: Clean install dependencies (handles corrupted node_modules)
+      # Cache node_modules keyed by package-lock.json (huge speedup on subsequent runs)
+      - name: Restore node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}\node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      # Fast install (uses cache when possible). If no lockfile, falls back to npm install.
+      - name: Install dependencies (fast, cached)
         run: |
-          if (Test-Path node_modules) { Remove-Item -Recurse -Force node_modules }
-          if (Test-Path package-lock.json) { Remove-Item -Force package-lock.json }
-          npm cache verify
-          npm install --include=dev --no-audit --no-fund --legacy-peer-deps
+          if (Test-Path package-lock.json) {
+            npm ci --prefer-offline --no-audit --no-fund
+          } else {
+            npm install --include=dev --prefer-offline --no-audit --no-fund --legacy-peer-deps
+          }
 
+      - name: Save node_modules cache
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}\node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      # Build with API base wired for IIS proxying
       - name: Build React app
         run: |
           $env:CI = "true"
@@ -83,10 +89,6 @@ jobs:
           if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) {
             throw "Build failed: build\index.html not found"
           }
-
-
-
-
 
       - name: Deploy to IIS site root
         run: |
