@@ -1,4 +1,4 @@
-name: Deploy BookingBite Frontend (Self-Contained)
+name: Deploy BookingBite Frontend (Self-Contained, Windows PS)
 
 on:
   push:
@@ -24,9 +24,9 @@ jobs:
     timeout-minutes: 45
     defaults:
       run:
-        shell: pwsh
+        shell: powershell   # <-- use Windows PowerShell (pwsh not required)
+
     env:
-      # --- corporate proxy / CA bundle (adjust if needed) ---
       HTTPS_PROXY: http://proxy.hlag.com:11009
       HTTP_PROXY: http://proxy.hlag.com:11009
       NO_PROXY: 127.0.0.1,localhost,*.hlag.com
@@ -48,18 +48,25 @@ jobs:
           node-version: "18"
           cache: "npm"
 
+      - name: Verify node/npm
+        run: |
+          node -v
+          npm -v
+
       - name: Configure npm proxy/registry (.npmrc)
         run: |
-          @"
+          $content = @"
           proxy=$env:HTTPS_PROXY
           https-proxy=$env:HTTPS_PROXY
           strict-ssl=false
           registry=https://registry.npmjs.org/
-          "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
+          "@
+          $file = Join-Path $env:GITHUB_WORKSPACE '.npmrc'
+          Set-Content -Path $file -Value $content -Encoding Ascii
+          Get-Content $file
 
       - name: Bring in production env (or set safe fallback)
         run: |
-          # If you store your CRA env file on the server, copy it in:
           $envSource = 'C:\deployments\env\bookingbite\.env.production.local'
           if (Test-Path $envSource) {
             Copy-Item $envSource -Destination "$env:GITHUB_WORKSPACE\.env.production.local" -Force
