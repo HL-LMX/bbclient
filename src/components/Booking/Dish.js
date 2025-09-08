@@ -1,4 +1,5 @@
-// File: src/components/Dish/Dish.js
+// File: bbclient/src/components/Dish/Dish.js
+
 // Displays a single dish row (name / calories / optional ratings).
 // All static layout and star styles moved into Dish.css.
 

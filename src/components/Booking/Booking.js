@@ -1,4 +1,5 @@
-// File: src/components/Booking/Booking.js
+// File: bbclient/src/components/Booking/Booking.js
+
 // Main booking/attendance screen. Uses only Booking.css for styling.
 
 import React, { useState, useEffect } from 'react';
