@@ -58,12 +58,10 @@ jobs:
           } else {
             npm install
           }
-          npm ls react-scripts --depth=0 || echo "react-scripts not listed (will install if needed)"
 
       - name: Build React app (fallback install for react-scripts)
         run: |
           $env:REACT_APP_API_URL = "/api/"
-          # If react-scripts is missing, add it ad-hoc (doesn't commit to repo)
           if (!(Test-Path ".\node_modules\.bin\react-scripts.cmd")) {
             Write-Warning "react-scripts not found; installing now..."
             npm install --no-audit --no-fund --save-dev react-scripts@5
@@ -72,6 +70,7 @@ jobs:
           if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) {
             throw "Build failed: build\index.html not found"
           }
+
 
 
       - name: Deploy to IIS site root
