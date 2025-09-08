@@ -21,7 +21,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: [self-hosted, windows, iis, bookingbite, frontend]
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       HTTPS_PROXY: http://proxy.hlag.com:11009
       HTTP_PROXY: http://proxy.hlag.com:11009
@@ -37,14 +37,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Use Node 18 (CRA 5 is happiest here) and cache npm's package cache
+      # CRA 5 is most stable on Node 18
       - name: Setup Node.js (v18) with npm cache
         uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
 
-      # Make npm trust the corporate proxy and CA
+      # Force npm to use the corporate proxy + trust Zscaler CA
       - name: Write project .npmrc (proxy + CA)
         run: |
           @"
@@ -54,17 +54,18 @@ jobs:
           cafile=C:\certs\hlag-zscaler-root.pem
           registry=https://registry.npmjs.org/
           "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
+          npm config list
 
-      # Cache node_modules keyed by package-lock.json (huge speedup on subsequent runs)
+      # Use a bumped cache key to avoid reusing any bad node_modules
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}\node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: node-modules-v2-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-${{ runner.os }}-
+            node-modules-v2-${{ runner.os }}-
 
-      # Fast install (uses cache when possible). If no lockfile, falls back to npm install.
+      # Fast install; will fetch through proxy+CA thanks to .npmrc
       - name: Install dependencies (fast, cached)
         run: |
           if (Test-Path package-lock.json) {
@@ -73,12 +74,23 @@ jobs:
             npm install --include=dev --prefer-offline --no-audit --no-fund --legacy-peer-deps
           }
 
+      # If react-scripts is still missing (e.g., a stale cache), install it now
+      - name: Ensure react-scripts is present
+        run: |
+          if (!(Test-Path ".\node_modules\.bin\react-scripts.cmd")) {
+            Write-Warning "react-scripts not found; installing now..."
+            npm install --no-audit --no-fund --legacy-peer-deps react-scripts@5
+          }
+          if (!(Test-Path ".\node_modules\.bin\react-scripts.cmd")) {
+            throw "react-scripts still missing after install"
+          }
+
       - name: Save node_modules cache
         if: always()
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}\node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: node-modules-v2-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       # Build with API base wired for IIS proxying
       - name: Build React app
