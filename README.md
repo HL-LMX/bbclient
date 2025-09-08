@@ -1,64 +1,78 @@
-# BookingBite – Windows/IIS Deployment & Runtime Guide
+# BookingBite -- Windows/IIS Deployment & Runtime Guide
 
-This document summarizes how the BookingBite site is deployed, how the pieces fit together, and which settings are required on Windows/IIS (including Waitress, a Windows service, URL Rewrite, and ARR). It reflects the **general project setup** and **what’s required** to run it reliably.
+This document summarizes how the BookingBite site is deployed, how the
+pieces fit together, and which settings are required on Windows/IIS
+(including Waitress, a Windows service, URL Rewrite, and ARR). It
+reflects the **general project setup** and **what's required** to run it
+reliably.
 
----
+------------------------------------------------------------------------
 
-## 1) High‑Level Architecture
+## 1) High-Level Architecture
 
-- **Frontend**: React single‑page app (CRA build).  
-  Deployed as static files under IIS site **“BookingBiteFrontend”** at  
-  `C:\inetpub\wwwroot\bookingbite`.
+-   **Frontend**: React single-page app (CRA build).\
+    Deployed as static files under IIS site **"BookingBiteFrontend"**
+    at\
+    `C:\inetpub\wwwroot\bookingbite`.
 
-- **Backend**: Django app served by **Waitress** on **127.0.0.1:8000**.  
-  The Python process runs as a Windows Service (service name seen in prod: **bookingbite_api**).
+-   **Backend**: Django app served by **Waitress** on
+    **127.0.0.1:8000**.\
+    The Python process runs as a Windows Service (service name seen in
+    prod: **bookingbite_api**).
 
-- **Reverse proxy / Web server**: **IIS 10** with **URL Rewrite** + **Application Request Routing (ARR)**.  
-  IIS serves the SPA and proxies API requests to Waitress.
+-   **Reverse proxy / Web server**: **IIS 10** with **URL Rewrite** +
+    **Application Request Routing (ARR)**.\
+    IIS serves the SPA and proxies API requests to Waitress.
 
-- **CORS**: Returned by the backend; responses include `Access-Control-Allow-Origin` for the site origin.
+-   **CORS**: Returned by the backend; responses include
+    `Access-Control-Allow-Origin` for the site origin.
 
-**Request flow**  
-Browser → IIS (port 80) → (static files or `/api/*` proxy) → Waitress (127.0.0.1:8000) → Django → IIS → Browser.
+**Request flow**\
+Browser → IIS (port 80) → (static files or `/api/*` proxy) → Waitress
+(127.0.0.1:8000) → Django → IIS → Browser.
 
----
+------------------------------------------------------------------------
 
 ## 2) Key Locations & Identities
 
-- **IIS site name**: `BookingBiteFrontend`  
-- **Site root**: `C:\inetpub\wwwroot\bookingbite`
-- **Backend working dir**: `C:\deployments\bbserver`
-- **Waitress URL**: `http://127.0.0.1:8000` (loopback only)
-- **IIS bindings**: `http://194.9.161.245:80` and `http://127.0.0.1:80`
-- **Windows service** (typical): `bookingbite_api`
+-   **IIS site name**: `BookingBiteFrontend`\
+-   **Site root**: `C:\inetpub\wwwroot\bookingbite`
+-   **Backend working dir**: `C:\deployments\bbserver`
+-   **Waitress URL**: `http://127.0.0.1:8000` (loopback only)
+-   **IIS bindings**: `http://194.9.161.245:80` and
+    `http://127.0.0.1:80`
+-   **Windows service** (typical): `bookingbite_api`
 
----
+------------------------------------------------------------------------
 
 ## 3) IIS Configuration
 
-IIS uses **URL Rewrite** rules (site scope) and **ARR** to proxy API traffic to Waitress. **Rule order matters** (API rules must come before the SPA catch‑all).
+IIS uses **URL Rewrite** rules (site scope) and **ARR** to proxy API
+traffic to Waitress. **Rule order matters** (API rules must come before
+the SPA catch-all).
 
 ### 3.1 Inbound Rules (site scope)
 
-1. **Add Trailing Slash to API**  
-   - Pattern: `^api/(.+[^/])$`  
-   - Action: **Redirect** → `/api/{R:1}/`  
-   - Purpose: normalize API URLs so DRF/Django trailing slash expectations are met.
-
-2. **Proxy API to Django**  
-   - Pattern: `^api/(.*)`  
-   - Action: **Rewrite** → `http://127.0.0.1:8000/{R:1}`  
-   - Purpose: route all API calls to the local Waitress server.
-
-3. **SPA Routing** (catch‑all)  
-   - Pattern: `.*`  
-   - Conditions: `{REQUEST_FILENAME} IsFile = false`, `{REQUEST_FILENAME} IsDirectory = false`  
-   - Action: **Rewrite** → `/index.html`  
-   - Purpose: serve the React app for all non‑API, non‑static requests.
+1.  **Add Trailing Slash to API**
+    -   Pattern: `^api/(.+[^/])$`\
+    -   Action: **Redirect** → `/api/{R:1}/`\
+    -   Purpose: normalize API URLs so DRF/Django trailing slash
+        expectations are met.
+2.  **Proxy API to Django**
+    -   Pattern: `^api/(.*)`\
+    -   Action: **Rewrite** → `http://127.0.0.1:8000/{R:1}`\
+    -   Purpose: route all API calls to the local Waitress server.
+3.  **SPA Routing** (catch-all)
+    -   Pattern: `.*`\
+    -   Conditions: `{REQUEST_FILENAME} IsFile = false`,
+        `{REQUEST_FILENAME} IsDirectory = false`\
+    -   Action: **Rewrite** → `/index.html`\
+    -   Purpose: serve the React app for all non-API, non-static
+        requests.
 
 #### Example `web.config` `<rewrite>` excerpt
 
-```xml
+``` xml
 <system.webServer>
   <rewrite>
     <rules>
@@ -88,11 +102,12 @@ IIS uses **URL Rewrite** rules (site scope) and **ARR** to proxy API traffic to 
 </system.webServer>
 ```
 
-> **ARR note**: ARR must be installed and enabled so that the **Rewrite** → **http://127.0.0.1:8000/...** proxying works.
+> **ARR note**: ARR must be installed and enabled so that the
+> **Rewrite** → **http://127.0.0.1:8000/...** proxying works.
 
 ### 3.2 Useful IIS Commands (PowerShell/AppCmd)
 
-```powershell
+``` powershell
 # Site overview
 Get-Website -Name BookingBiteFrontend | Select Name, State, PhysicalPath, ApplicationPool
 Get-WebBinding -Name BookingBiteFrontend
@@ -101,16 +116,20 @@ Get-WebBinding -Name BookingBiteFrontend
 & $env:SystemRoot\System32\inetsrv\appcmd.exe list config BookingBiteFrontend /section:system.webServer/rewrite/rules
 ```
 
----
+------------------------------------------------------------------------
 
 ## 4) Backend: Waitress + Windows Service
 
-The Django backend is served by **Waitress** bound to **127.0.0.1:8000** (not publicly exposed). It’s recommended to run it as a Windows service for resilience (NSSM is a common way to install a Python process as a service).
+The Django backend is served by **Waitress** bound to **127.0.0.1:8000**
+(not publicly exposed). It's recommended to run it as a Windows service
+for resilience (NSSM is a common way to install a Python process as a
+service).
 
 ### 4.1 Typical Waitress Invocation
 
 From the backend working dir (virtual env recommended):
-```powershell
+
+``` powershell
 # Example invocation
 python -m waitress --listen=127.0.0.1:8000 myproject.wsgi:application
 # or
@@ -121,7 +140,7 @@ waitress-serve --listen=127.0.0.1:8000 myproject.wsgi:application
 
 > If NSSM is installed and on PATH; adjust paths/names as appropriate.
 
-```powershell
+``` powershell
 # Install service
 nssm install bookingbite_api "C:\path\to\venv\Scripts\python.exe" ^
   "-m waitress --listen=127.0.0.1:8000 myproject.wsgi:application"
@@ -142,7 +161,7 @@ nssm start bookingbite_api
 
 ### 4.3 Quick Backend Health Checks
 
-```powershell
+``` powershell
 # Process listening on 8000
 netstat -ano | findstr :8000
 
@@ -154,29 +173,34 @@ Get-Service | ? { $_.Name -match 'booking|waitress|django|python' -or $_.Display
   ft -Auto Name,DisplayName,Status
 ```
 
----
+------------------------------------------------------------------------
 
 ## 5) Frontend Build & Environment
 
-The React app reads the API base URL at **build time** from `process.env.REACT_APP_API_URL`. In production, provide:
+The React app reads the API base URL at **build time** from
+`process.env.REACT_APP_API_URL`. In production, provide:
 
 **`<react-project-root>/.env.production.local`**
-```dotenv
+
+``` dotenv
 REACT_APP_API_URL=/api/
 ```
 
 Then build and deploy:
-```bash
+
+``` bash
 npm ci
 npm run build
 # Copy build output to IIS site root:
 #   build/*  ->  C:\inetpub\wwwroot\bookingbite
 ```
 
-> Using `/api/` makes the app origin‑agnostic; IIS will proxy `/api/*` to Waitress.
+> Using `/api/` makes the app origin-agnostic; IIS will proxy `/api/*`
+> to Waitress.
 
 ### 5.1 API Helpers Used by the SPA
-```js
+
+``` js
 // base
 export const API_URL = process.env.REACT_APP_API_URL;
 
@@ -194,15 +218,14 @@ export const API_ENDPOINTS = {
 ```
 
 With `REACT_APP_API_URL=/api/`, runtime requests look like:
-```
-/api/booking/week/?date=YYYY-MM-DD
-```
 
----
+    /api/booking/week/?date=YYYY-MM-DD
+
+------------------------------------------------------------------------
 
 ## 6) Smoke Tests
 
-```powershell
+``` powershell
 # Should return JSON (proxied via IIS → Waitress → Django)
 curl.exe -i "http://<PUBLIC-IP>/api/booking/week/?date=2025-05-28"
 
@@ -210,34 +233,41 @@ curl.exe -i "http://<PUBLIC-IP>/api/booking/week/?date=2025-05-28"
 curl.exe -i "http://<PUBLIC-IP>/booking/week/?date=2025-05-28"
 ```
 
----
+------------------------------------------------------------------------
 
 ## 7) Security & Ops Notes
 
-- Keep Waitress bound to **127.0.0.1** (loopback) so it’s reachable only via IIS.
-- Ensure CORS in the backend allows the site origin (e.g., `http://<PUBLIC-IP>` or your hostname).
-- If you change DRF’s trailing‑slash behavior, adjust the “Add Trailing Slash to API” rule accordingly.
-- Consider enabling service logging (NSSM stdout/stderr) and Django/Waitress logs under `C:\deployments\bbserver\logs`.
-- Place the API rules **above** the SPA catch‑all to prevent the SPA from intercepting API requests.
+-   Keep Waitress bound to **127.0.0.1** (loopback) so it's reachable
+    only via IIS.
+-   Ensure CORS in the backend allows the site origin (e.g.,
+    `http://<PUBLIC-IP>` or your hostname).
+-   If you change DRF's trailing-slash behavior, adjust the "Add
+    Trailing Slash to API" rule accordingly.
+-   Consider enabling service logging (NSSM stdout/stderr) and
+    Django/Waitress logs under `C:\deployments\bbserver\logs`.
+-   Place the API rules **above** the SPA catch-all to prevent the SPA
+    from intercepting API requests.
 
----
+------------------------------------------------------------------------
 
 ## 8) Common Pitfalls
 
-- **Missing `REACT_APP_API_URL` at build time** → frontend calls `/booking/...` and receives SPA HTML instead of JSON.  
-  **Fix**: set `.env.production.local` with `REACT_APP_API_URL=/api/` **before** building.
+-   **Missing `REACT_APP_API_URL` at build time** → frontend calls
+    `/booking/...` and receives SPA HTML instead of JSON.\
+    **Fix**: set `.env.production.local` with `REACT_APP_API_URL=/api/`
+    **before** building.
 
-- **Wrong rewrite rule order** → SPA catch‑all swallows API routes.  
-  **Fix**: ensure API rules are **above** the SPA rule.
+-   **Wrong rewrite rule order** → SPA catch-all swallows API routes.\
+    **Fix**: ensure API rules are **above** the SPA rule.
 
-- **Exposing Waitress publicly** by binding `0.0.0.0`.  
-  **Fix**: keep `127.0.0.1` and proxy via IIS.
+-   **Exposing Waitress publicly** by binding `0.0.0.0`.\
+    **Fix**: keep `127.0.0.1` and proxy via IIS.
 
----
+------------------------------------------------------------------------
 
 ## 9) Quick Reference (Commands)
 
-```powershell
+``` powershell
 # IIS site & binding
 Get-Website -Name BookingBiteFrontend | Select Name, State, PhysicalPath, ApplicationPool
 Get-WebBinding -Name BookingBiteFrontend
@@ -254,3 +284,42 @@ Get-Service | ? { $_.Name -match 'booking|waitress|django|python' -or $_.Display
   ft -Auto Name,DisplayName,Status
 ```
 
+------------------------------------------------------------------------
+
+## 10) Database Backup Strategy (SQLite)
+
+SQLite doesn't have a server process, so backups must be handled at the
+file level. Professional approach:
+
+-   **Hot backups**: use SQLite's `.backup` command or Python's
+    `sqlite3.backup()` API for transactionally safe copies.
+
+-   **Cold backups**: stop the service (Waitress) briefly, copy the
+    file, restart service. Works but causes downtime.
+
+-   **Automation**: use a **PowerShell script** (`backup_sqlite.ps1`)
+    that:
+
+    -   Writes timestamped backup files to `C:\backups\bookingbite`
+    -   Uses Python's `sqlite3.backup()` if `sqlite3.exe` isn't
+        available
+    -   Rotates old backups (default: keep \~5 years)
+
+-   **Scheduling**: Task Scheduler runs the backup daily at 02:00.
+    Example:
+
+    ``` powershell
+    schtasks /Create /TN "Bookingbite SQLite Backup (Daily)" /SC DAILY /ST 02:00 ^
+      /TR "\"$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe\" -NoProfile -ExecutionPolicy Bypass -File \"C:\deployments\bbserver\backup_sqlite.ps1\"" ^
+      /RL HIGHEST /F
+    ```
+
+-   **Retention**: configurable in the script (`$DaysToKeep`). With
+    \~556 KB/day, years of backups cost little storage (\~200 MB/year).
+
+-   **Offsite copy**: sync `C:\backups\bookingbite` to GitHub, cloud, or
+    network storage for disaster recovery.
+
+**Key takeaway**: keep `C:\deployments\bbserver\db.sqlite3` out of
+version control, and rely on automated daily backups in
+`C:\backups\bookingbite` with rotation + offsite sync.
