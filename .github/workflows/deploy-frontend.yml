@@ -26,9 +26,9 @@ jobs:
       HTTPS_PROXY: http://proxy.hlag.com:11009
       HTTP_PROXY: http://proxy.hlag.com:11009
       NO_PROXY: 127.0.0.1,localhost,*.hlag.com
-      NODE_EXTRA_CA_CERTS: C:\certs\hlag-zscaler-root.pem
-      REQUESTS_CA_BUNDLE: C:\certs\hlag-zscaler-root.pem
-      SSL_CERT_FILE: C:\certs\hlag-zscaler-root.pem
+      NODE_EXTRA_CA_CERTS: C:\certs\corp-bundle.pem   # <- use the new bundle
+      REQUESTS_CA_BUNDLE: C:\certs\corp-bundle.pem
+      SSL_CERT_FILE: C:\certs\corp-bundle.pem
     defaults:
       run:
         shell: powershell
@@ -44,28 +44,27 @@ jobs:
           node-version: "18"
           cache: "npm"
 
-      # Force npm to use the corporate proxy + trust Zscaler CA
-      - name: Write project .npmrc (proxy + CA)
+      # Force npm to use the corporate proxy + trust Zscaler/HLAG bundle
+      - name: Write project .npmrc (proxy + corporate CA bundle)
         run: |
           @"
           proxy=$env:HTTPS_PROXY
           https-proxy=$env:HTTPS_PROXY
           strict-ssl=true
-          cafile=C:\certs\hlag-zscaler-root.pem
+          cafile=C:\certs\corp-bundle.pem
           registry=https://registry.npmjs.org/
           "@ | Out-File -FilePath "$env:GITHUB_WORKSPACE\.npmrc" -Encoding ascii
-          npm config list
 
-      # Use a bumped cache key to avoid reusing any bad node_modules
+      # Bump cache namespace to avoid any previously-bad node_modules
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}\node_modules
-          key: node-modules-v2-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: node-modules-v3-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            node-modules-v2-${{ runner.os }}-
+            node-modules-v3-${{ runner.os }}-
 
-      # Fast install; will fetch through proxy+CA thanks to .npmrc
+      # Fast install; npm will honor proxy+CA via .npmrc and env
       - name: Install dependencies (fast, cached)
         run: |
           if (Test-Path package-lock.json) {
@@ -74,8 +73,8 @@ jobs:
             npm install --include=dev --prefer-offline --no-audit --no-fund --legacy-peer-deps
           }
 
-      # If react-scripts is still missing (e.g., a stale cache), install it now
-      - name: Ensure react-scripts is present
+      # If react-scripts is still missing (e.g., stale cache), install it now
+      - name: Ensure react-scripts is present (fallback)
         run: |
           if (!(Test-Path ".\node_modules\.bin\react-scripts.cmd")) {
             Write-Warning "react-scripts not found; installing now..."
@@ -90,7 +89,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}\node_modules
-          key: node-modules-v2-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: node-modules-v3-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       # Build with API base wired for IIS proxying
       - name: Build React app
