@@ -1,4 +1,4 @@
-// File: src/components/Booking/Day.js
+// File: bbclient/src/components/Booking/Day.js
 
 import React from 'react';
 import Dish from './Dish';
