@@ -279,7 +279,7 @@ export const Booking = () => {
                 <div className="col-empty" >
                     <div className="reminderContainer">
                         <p className="reminderTextSmall">
-                            *Rating Dishes is only available on days with saved attendance.
+                            *The "Rating Dishes" feature is only available on days with saved attendance.
                         </p>
                     </div> 
                 </div>
