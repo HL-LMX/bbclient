@@ -1,4 +1,4 @@
-name: Deploy BookingBite Frontend (Self-Contained, Windows PS)
+name: Deploy BookingBite Frontend (Inline, Uses Server Env)
 
 on:
   push:
@@ -24,9 +24,10 @@ jobs:
     timeout-minutes: 45
     defaults:
       run:
-        shell: powershell   # <-- use Windows PowerShell (pwsh not required)
+        shell: powershell
 
     env:
+      # Corporate proxy/CA bundle (if applicable to your server)
       HTTPS_PROXY: http://proxy.hlag.com:11009
       HTTP_PROXY: http://proxy.hlag.com:11009
       NO_PROXY: 127.0.0.1,localhost,*.hlag.com
@@ -39,63 +40,42 @@ jobs:
       NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 18 (with npm cache)
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
-
-      - name: Verify node/npm
+      - name: Start log
         run: |
+          Write-Output "=== BookingBite Frontend deploy started: $(Get-Date) ==="
+
+      # Build exactly where your manual script builds, so the same
+      # .env.production.local and local config are used.
+      - name: Update repo on server
+        run: |
+          Set-Location -Path "C:\deployments\bbclient"
+          git --version
+          git remote -v
+          git fetch origin
+          git reset --hard origin/main
+
+      - name: Install dependencies (server Node/npm)
+        run: |
+          Set-Location -Path "C:\deployments\bbclient"
           node -v
           npm -v
-
-      - name: Configure npm proxy/registry (.npmrc)
-        run: |
-          $content = @"
-          proxy=$env:HTTPS_PROXY
-          https-proxy=$env:HTTPS_PROXY
-          strict-ssl=false
-          registry=https://registry.npmjs.org/
-          "@
-          $file = Join-Path $env:GITHUB_WORKSPACE '.npmrc'
-          Set-Content -Path $file -Value $content -Encoding Ascii
-          Get-Content $file
-
-      - name: Bring in production env (or set safe fallback)
-        run: |
-          $envSource = 'C:\deployments\env\bookingbite\.env.production.local'
-          if (Test-Path $envSource) {
-            Copy-Item $envSource -Destination "$env:GITHUB_WORKSPACE\.env.production.local" -Force
-            Write-Output "Loaded .env.production.local from $envSource"
-          } else {
-            Write-Warning "No .env.production.local at $envSource; falling back to REACT_APP_API_URL=/api/"
-            $env:REACT_APP_API_URL = "/api/"
-          }
-
-      - name: Install dependencies
-        run: |
           if (Test-Path package-lock.json) {
             npm ci --no-audit --no-fund
           } else {
             npm install --include=dev --no-audit --no-fund --legacy-peer-deps
           }
-
-      - name: Ensure Babel plugin present (silence CRA/babel warning)
-        run: |
+          # Silence CRA/babel warning that can break CI unpredictably
           if (-not (Test-Path "node_modules\@babel\plugin-proposal-private-property-in-object")) {
             npm install -D @babel/plugin-proposal-private-property-in-object --no-audit --no-fund --legacy-peer-deps
           }
 
-      - name: Build (don’t treat warnings as errors)
+      - name: Build (don’t fail on ESLint warnings in CI)
         run: |
+          Set-Location -Path "C:\deployments\bbclient"
           if (Test-Path Env:CI) { Remove-Item Env:CI -ErrorAction SilentlyContinue }
           $env:DISABLE_ESLINT_PLUGIN = "true"
           npm run build
-          if (!(Test-Path "$env:GITHUB_WORKSPACE\build\index.html")) {
+          if (!(Test-Path ".\build\index.html")) {
             throw "Build failed: build\index.html not found"
           }
 
@@ -105,12 +85,26 @@ jobs:
           if (!(Test-Path $deploy)) { New-Item -ItemType Directory -Path $deploy | Out-Null }
           # keep web.config; wipe everything else
           Get-ChildItem $deploy | Where-Object { $_.Name -ne 'web.config' } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-          # copy new build
-          Copy-Item -Path (Join-Path $env:GITHUB_WORKSPACE 'build\*') -Destination $deploy -Recurse -Force
+          # copy new build from the server build directory
+          Copy-Item -Path "C:\deployments\bbclient\build\*" -Destination $deploy -Recurse -Force
 
-      - name: Sanity check deployed files
+      - name: Sanity checks (index + static + API URL present)
         run: |
           $deploy = 'C:\inetpub\wwwroot\bookingbite'
-          if (!(Test-Path (Join-Path $deploy 'index.html'))) { throw "Deploy failed: index.html missing in $deploy" }
+          $index = Join-Path $deploy 'index.html'
+          if (!(Test-Path $index)) { throw "Deploy failed: index.html missing in $deploy" }
           if (!(Test-Path (Join-Path $deploy 'static'))) { throw "Deploy failed: static folder missing in $deploy" }
           Write-Output "Deploy OK -> $deploy"
+
+          # Optional: try to detect the baked API base URL in the compiled bundle
+          $bundle = Get-ChildItem (Join-Path $deploy 'static\js') -Filter "main*.js" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+          if ($bundle) {
+            Write-Output "Inspecting bundle: $($bundle.FullName)"
+            Select-String -Path $bundle.FullName -Pattern 'REACT_APP_API_URL|/booking/week|/api/' -SimpleMatch -Encoding UTF8 | Select-Object -First 10 | ForEach-Object { $_.Line } 
+          } else {
+            Write-Warning "Could not find main*.js to inspect"
+          }
+
+      - name: End log
+        run: |
+          Write-Output "=== BookingBite Frontend deploy finished: $(Get-Date) ==="
