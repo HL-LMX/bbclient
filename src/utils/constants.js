@@ -7,7 +7,7 @@ export const API_URL = process.env.REACT_APP_API_URL;
 
 
 // 2) Number of aditional days to lock the Menu Management (default value is "today is locked, plus/minus the days declared below")
-export const CHEF_LOCKED_DAYS_AHEAD = 0;
+export const CHEF_LOCKED_DAYS_AHEAD = -1;
 
 
 // 3) Days of week
