@@ -5,6 +5,7 @@
 
 import { API_URL, API_ENDPOINTS, DAYS_OF_WEEK, CHEF_LOCKED_DAYS_AHEAD, DEFAULT_MENU_MANAGEMENT_LOAD_DATE } from '../../utils/constants';
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MuiCalendar from './MuiCalendar';
 import CourseComponent from './CourseComponent';
 import './MenuManagement.css';
@@ -29,8 +30,28 @@ export const MenuManagement = () => {
     return d;
   });
 
-  // 2) Track the user‐selectable date (defaults to next Monday)
-  const [selectedDate, setSelectedDate] = useState(() => new Date(currentDate));
+  // Sync selected date with URL ?date= param
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // 2) Track the user‐selectable date (from URL param, or defaults to next Monday)
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const dateParam = searchParams.get('date');
+    if (dateParam) {
+      const parsed = new Date(dateParam + 'T00:00:00');
+      if (!isNaN(parsed)) return parsed;
+    }
+    return new Date(currentDate);
+  });
+
+  /**
+   * updateSelectedDate: Update both local state and URL query param.
+   *
+   * @param {Date} newDate
+   */
+  const updateSelectedDate = (newDate) => {
+    setSelectedDate(newDate);
+    setSearchParams({ date: newDate.toISOString().split('T')[0] });
+  };
   const [dishes, setDishes] = useState([]);
   const [attendees, setAttendees] = useState(0);
 
@@ -163,7 +184,7 @@ export const MenuManagement = () => {
     while (!DAYS_OF_WEEK.includes(getDayName(newDate))) {
       newDate.setDate(newDate.getDate() + (days > 0 ? 1 : -1));
     }
-    setSelectedDate(newDate);
+    updateSelectedDate(newDate);
   };
 
   /**
@@ -173,9 +194,18 @@ export const MenuManagement = () => {
    * @param {Date} newValue 
    */
   const handleCalendarChange = (newValue) => {
-    setSelectedDate(newValue);
+    updateSelectedDate(newValue);
     // fetchDishes is also triggered by useEffect, but we can call it immediately if desired
     fetchDishes(newValue);
+  };
+
+  /**
+   * goToToday: Navigate selectedDate to today.
+   */
+  const goToToday = () => {
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    updateSelectedDate(t);
   };
 
   /**
@@ -278,7 +308,16 @@ export const MenuManagement = () => {
       <div className="menu-sections">
         {/* 4a) Mini‐Calendar */}
         <div className="bg-secondary text-light rounded p-3">
-          <h4 className="text-center">Calendar</h4>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <h4 style={{ margin: 0 }}>Calendar</h4>
+            <button
+              className="btn btn-sm btn-light"
+              style={{ position: 'absolute', right: 0 }}
+              onClick={goToToday}
+            >
+              Today
+            </button>
+          </div>
           <MuiCalendar
             currentDate={selectedDate}
             onChange={handleCalendarChange}
