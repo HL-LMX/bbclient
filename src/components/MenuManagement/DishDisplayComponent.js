@@ -122,7 +122,7 @@ const DishDisplayComponent = ({
             {/* Last modified timestamp */}
             {dish.dish.updated_at && (
                 <span className="updated-at-cell" title={`Uploaded: ${new Date(dish.dish.created_at).toLocaleString()}`}>
-                    {new Date(dish.dish.updated_at).toLocaleDateString()}
+                    {new Date(dish.dish.updated_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}
                 </span>
             )}        </div>
     );

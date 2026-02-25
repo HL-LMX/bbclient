@@ -107,7 +107,7 @@
 .updated-at-cell {
     grid-column: span 2;
     font-size: 0.75em;
-    color: #555;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;

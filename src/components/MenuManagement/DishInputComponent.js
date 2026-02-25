@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce'; // (or your own debounce)
 const DishInputComponent = ({ onSave, isPastDate, category }) => {
 
     const [dishName, setDishName] = useState('');
-    const [calories, setCalories] = useState(0);
+    const [calories, setCalories] = useState('');
     const [isHealthy, setIsHealthy] = useState(false);
     const [isSugarFree, setIsSugarFree] = useState(false);
 
@@ -76,7 +76,7 @@ const DishInputComponent = ({ onSave, isPastDate, category }) => {
     // 4.4 When a suggestion is clicked:
     const handleSuggestionClick = (suggestion) => {
         setDishName(suggestion.dish_name);
-        setCalories(suggestion.dish_calories || 0);
+        setCalories(suggestion.dish_calories ?? '');
         setIsHealthy(!!suggestion.light_healthy);
         setIsSugarFree(!!suggestion.sugar_free);
         setSelectedDishId(suggestion.dish_id);
@@ -115,7 +115,7 @@ const DishInputComponent = ({ onSave, isPastDate, category }) => {
 
         // Reset all states
         setDishName('');
-        setCalories(0);
+        setCalories('');
         setIsHealthy(false);
         setIsSugarFree(false);
         setSelectedDishId(null);
