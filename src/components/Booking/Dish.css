@@ -88,6 +88,7 @@
  .dish-name {
     justify-self: start;
     align-self: center;
+    text-align: left;
  }
 .text-grey {
     color: grey;
