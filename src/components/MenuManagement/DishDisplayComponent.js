@@ -119,7 +119,12 @@ const DishDisplayComponent = ({
                 className="checkbox-cell"
                 disabled
             />
-        </div>
+            {/* Last modified timestamp */}
+            {dish.dish.updated_at && (
+                <span className="updated-at-cell" title={`Uploaded: ${new Date(dish.dish.created_at).toLocaleString()}`}>
+                    {new Date(dish.dish.updated_at).toLocaleDateString()}
+                </span>
+            )}        </div>
     );
 };
 

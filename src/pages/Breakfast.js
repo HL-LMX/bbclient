@@ -39,6 +39,18 @@ export const Breakfast = () => {
 				</p>
 				
 			</div>
+						<div className="col-md-8 instructions">
+				<p>
+					REMEMBER
+				</p>
+				<p>
+					- One dish or drink per submission
+				</p>
+				<p>
+					- Breakfast service ends at 11am.
+				</p>
+				
+			</div>
 			<div className="col-md-8 form-container">
 			<iframe
 				src="https://forms.office.com/Pages/ResponsePage.aspx?id=oVHjnJutPkC_Oxo-05ACl2qpkTy0ixVCgH8NMdW-GBhUODJCU1JESUtMMEZQQ0Q4TkdVNjMxUjg2Sy4u&embed=true"

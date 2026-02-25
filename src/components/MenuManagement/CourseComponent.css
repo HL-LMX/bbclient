@@ -17,7 +17,7 @@
  */
 .title-row {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(14, 1fr);
     margin-bottom: 1em;
     gap: 0.5em;
 }

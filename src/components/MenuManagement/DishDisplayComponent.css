@@ -11,7 +11,7 @@
  */
 .dish-display-row {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(14, 1fr);
     margin-bottom: 1em;
     gap: 0.8em;
 }
@@ -99,4 +99,17 @@
  */
 .checkbox-cell {
     grid-column: span 1;
+}
+/**
+ * Last-modified timestamp cell:
+ *   grid-column: span 2;
+ */
+.updated-at-cell {
+    grid-column: span 2;
+    font-size: 0.75em;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }

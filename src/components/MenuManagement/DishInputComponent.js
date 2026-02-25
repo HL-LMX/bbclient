@@ -176,12 +176,17 @@ const DishInputComponent = ({ onSave, isPastDate, category }) => {
                             borderBottom: '1px solid #eee',
                             }}
                         >
-                            {/* 1. Dish name + calories */}
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                            {/* 1. Dish name + calories + last modified */}
+                            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px' }}>
                             <span style={{ fontWeight: 'bold' }}>{sug.dish_name}</span>
                             {sug.dish_calories != null && (
-                                <span style={{ marginLeft: '8px', fontSize: '0.9em', color: '#666' }}>
+                                <span style={{ fontSize: '0.9em', color: '#666' }}>
                                 ({sug.dish_calories} cal)
+                                </span>
+                            )}
+                            {sug.updated_at && (
+                                <span style={{ fontSize: '0.75em', color: '#999', marginLeft: '4px' }}>
+                                Updated: {new Date(sug.updated_at).toLocaleDateString()}
                                 </span>
                             )}
                             </div>

@@ -75,6 +75,7 @@ const CourseComponent = ({
                     <span className="col-span-2-center">Cal.</span>
                     <span className="col-span-1-right">Light &amp; Healthy</span>
                     <span className="col-span-1-center">Sugar Free</span>
+                    <span className="col-span-2-center">Modified</span>
                 </div>
 
                 {/* Dish Items */}
